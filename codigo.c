@@ -39,6 +39,41 @@ int main(){
       printf("=====================================\n");
       printf("Escolha uma opção: ");
     }
+   case 2:
+    int menu_funcionario;
+    printf("\n=====================================\n");
+    printf("=== <Menu Funcionario> ===\n");
+    printf("=====================================\n");
+    printf("1 - Cadastra Funcionario Novo\n");
+    printf("2 - Editar Cadastro\n");
+    printf("3 - Mudar Quantidade do Produto\n");
+    printf("0 - Voltar para <Menu Inventario>\n");
+    printf("=====================================\n");
+    printf("Escolha uma opção: ");
+    break;
+    
+      printf("\n=====================================\n");
+      printf("=== <Cadastro Funcionario> ===\n");
+      printf("=====================================\n");
+      printf("1 - Nome do Funcionario:\n");
+      printf("2 - CPF:\n");
+      printf("3 - Numero:\n");
+      printf("4 - Cargo:\n");
+      printf("5 - Salário:\n");
+      printf("6 - Espediente:\n");
+      printf("7 - Endereço:\n");
+      printf("=====================================\n");
+      printf("Escolha uma opção: ");
+   case 3:
+    int menu_Entrada_Saida;
+    printf("\n=====================================\n");
+    printf("=== <Menu Funcionario> ===\n");
+    printf("=====================================\n");
+    printf("1 - Entrada e Saida de Produtos\n");
+    printf("2 - Entrada e Saida de Funcionarios\n");
+    printf("0 - Voltar para <Menu Inventario>\n");
+    printf("=====================================\n");
+    printf("Escolha uma opção: ");
     break;
 }
 }
