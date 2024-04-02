@@ -78,7 +78,7 @@ void menu_funcionario(){
  printf("0 - Voltar para <Menu Inventario>\n");
  printf("=====================================\n");
  printf("Escolha uma opção: ");
- scanf("%d", &menu);
+ scanf("%d", &option);
  switch(option){
   case 1:
    printf("\n=====================================\n");
@@ -126,6 +126,7 @@ void menu_funcionario(){
  }
 }
 void menu_Entrada_Saida(){
+ int option;
  printf("\n=====================================\n");
  printf("=== <Menu Funcionario> ===\n");
  printf("=====================================\n");
@@ -134,4 +135,19 @@ void menu_Entrada_Saida(){
  printf("0 - Voltar para <Menu Inventario>\n");
  printf("=====================================\n");
  printf("Escolha uma opção: ");
+ scanf("%d", &option);
+ switch (option){
+  case 1:
+   printf("\n=====================================\n");
+   printf("===== <Entrada e Saida Produtos> =====\n");
+   printf("=====================================\n\n");
+  break;
+ 
+  case 2:
+   printf("\n=====================================\n");
+   printf("=== <Entrada e Saida Funcionarios> ====\n");
+   printf("=====================================\n\n");
+  break;
+ }
+
 }
