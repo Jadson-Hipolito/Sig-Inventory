@@ -16,6 +16,7 @@ int main(){
  printf("=====================================\n");
  printf("Escolha uma opção: ");
  scanf("%d", &menu);
+ getchar();
  switch (menu) {
   case 1:
    menu_produto();
@@ -39,6 +40,8 @@ void menu_produto(){
  printf("0 - Voltar para <Menu Inventario>\n");
  printf("=====================================\n");
  printf("Escolha uma opção: ");
+ scanf("%d", &option);
+ getchar();
  switch(option){
   case 1:
    printf("\n=====================================\n");
@@ -53,11 +56,10 @@ void menu_produto(){
    printf("7 - Quantidade para pedir reposição (Opcional):\n");
    printf("8 - Anotações de Armazenamento(Opcional):\n");
    printf("=====================================\n");
-   printf("Escolha uma opção: ");
    break;
   case 2:
    printf("\n=====================================\n");
-   printf("=== <Excluir Produto> ===\n");
+   printf("========== <Excluir Produto> ==========\n");
    printf("=====================================\n\n");
    printf("1 - Codigo do Produto:\n");
    printf("2 - Digite 1 para confirmar Exclusão:\n\n");
@@ -79,6 +81,7 @@ void menu_funcionario(){
  printf("=====================================\n");
  printf("Escolha uma opção: ");
  scanf("%d", &option);
+ getchar();
  switch(option){
   case 1:
    printf("\n=====================================\n");
@@ -98,11 +101,11 @@ void menu_funcionario(){
    printf("\n=====================================\n");
    printf("== <Editar informação do Funcionario> =\n");
    printf("=====================================\n\n");
-    
+
    printf("\n=====================================\n");
-   printf("== Cpf do funcionario que ira editar\n");
+   printf("== Cpf do funcionario que ira editar:\n");
    printf("=====================================\n\n");
-    
+
    printf("1 - Nome do Funcionario:\n");
    printf("2 - Numero:\n");
    printf("3 - Cargo:\n");
@@ -136,13 +139,14 @@ void menu_Entrada_Saida(){
  printf("=====================================\n");
  printf("Escolha uma opção: ");
  scanf("%d", &option);
+ getchar();
  switch (option){
   case 1:
    printf("\n=====================================\n");
    printf("===== <Entrada e Saida Produtos> =====\n");
    printf("=====================================\n\n");
   break;
- 
+
   case 2:
    printf("\n=====================================\n");
    printf("=== <Entrada e Saida Funcionarios> ====\n");
