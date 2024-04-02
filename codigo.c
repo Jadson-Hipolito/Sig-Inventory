@@ -7,7 +7,7 @@ void menu_Entrada_Saida();
 
 int main(){
  printf("\n=====================================\n");
- printf("=== <Menu Inventario> ===\n");
+ printf("========= <Menu Inventario> =========\n");
  printf("=====================================\n");
  printf("1 - Produtos\n");
  printf("2 - Funcionarios\n");
@@ -33,10 +33,12 @@ int main(){
 void menu_produto(){
  int option;
  printf("\n=====================================\n");
- printf("=== <Menu Produtos> ===\n");
+ printf("========== <Menu Produtos> ==========\n");
  printf("=====================================\n");
  printf("1 - Cadastra Produto Novo\n");
  printf("2 - Excluir Produto\n");
+ printf("3 - Alterar Produto\n");
+ printf("4 - Listar Produtos\n");
  printf("0 - Voltar para <Menu Inventario>\n");
  printf("=====================================\n");
  printf("Escolha uma opção: ");
@@ -59,10 +61,26 @@ void menu_produto(){
    break;
   case 2:
    printf("\n=====================================\n");
-   printf("========== <Excluir Produto> ==========\n");
+   printf("========== <Editar Produto> ==========\n");
    printf("=====================================\n\n");
    printf("1 - Codigo do Produto:\n");
-   printf("2 - Digite 1 para confirmar Exclusão:\n\n");
+   printf("=====================================\n");
+   printf("1 - Nome do Produto:\n");
+   printf("2 - Codigo de Barra:\n");
+   printf("3 - Quantidade Atual:\n");
+   printf("4 - Tipo de Produto:\n");
+   printf("5 - Local do Produto:\n");
+   printf("6 - Fornecedor(Opcional):\n");
+   printf("7 - Quantidade para pedir reposição (Opcional):\n");
+   printf("8 - Anotações de Armazenamento(Opcional):\n");
+   printf("=====================================\n");
+   printf("=====================================\n");
+   break;
+  case 3:
+   printf("\n=====================================\n");
+   printf("========== <Lista de Produto> ===========\n");
+   printf("=====================================\n\n");
+   printf("1 - Lista de Produtos Cadastrados:\n");
    printf("=====================================\n");
    printf("=====================================\n");
    break;
@@ -76,7 +94,8 @@ void menu_funcionario(){
  printf("=====================================\n");
  printf("1 - Cadastra Funcionario Novo\n");
  printf("2 - Editar Cadastro\n");
- printf("3 - Excluir Funcionario\n");
+ printf("3 - Listar Funcionarios\n");
+ printf("4 - Excluir Funcionario\n");
  printf("0 - Voltar para <Menu Inventario>\n");
  printf("=====================================\n");
  printf("Escolha uma opção: ");
@@ -131,10 +150,12 @@ void menu_funcionario(){
 void menu_Entrada_Saida(){
  int option;
  printf("\n=====================================\n");
- printf("=== <Menu Funcionario> ===\n");
+ printf("====== <Menu Entrada e Saida> =======\n");
  printf("=====================================\n");
  printf("1 - Entrada e Saida de Produtos\n");
  printf("2 - Entrada e Saida de Funcionarios\n");
+ printf("3 - Editar Entrada e Saida de Funcionario\n");
+ printf("4 - Remover Entrada ou saida de Funcionario\n");
  printf("0 - Voltar para <Menu Inventario>\n");
  printf("=====================================\n");
  printf("Escolha uma opção: ");
@@ -152,6 +173,18 @@ void menu_Entrada_Saida(){
    printf("=== <Entrada e Saida Funcionarios> ====\n");
    printf("=====================================\n\n");
   break;
+
+  case 3:
+   printf("\n=====================================\n");
+   printf("=== <Editar Entrada e Saida de funcionario> ====\n");
+   printf("Cpf do funcionario que ira editara entrada:\n");
+   break;
+
+  case 4:
+   printf("=====================================\n");
+   printf("=== <Remover Entrada ou Saida de Funcionario> ====\n");
+   printf("Cpf do funcionario que ira remover entrada:\n");
+   break;
  }
 
 }
