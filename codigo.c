@@ -47,7 +47,7 @@ void menu_produto(){
  switch(option){
   case 1:
    printf("\n=====================================\n");
-   printf("=== <Cadastro Produto> ===\n");
+   printf("======== <Cadastrar Produto> ========\n");
    printf("=====================================\n");
    printf("1 - Nome do Produto:\n");
    printf("2 - Codigo de Barra:\n");
@@ -61,7 +61,7 @@ void menu_produto(){
    break;
   case 2:
    printf("\n=====================================\n");
-   printf("========== <Editar Produto> ==========\n");
+   printf("========== <Editar Produto> =========\n");
    printf("=====================================\n\n");
    printf("1 - Codigo do Produto:\n");
    printf("=====================================\n");
@@ -78,7 +78,7 @@ void menu_produto(){
    break;
   case 3:
    printf("\n=====================================\n");
-   printf("========== <Lista de Produto> ===========\n");
+   printf("========= <Lista de Produto> ========\n");
    printf("=====================================\n\n");
    printf("1 - Lista de Produtos Cadastrados:\n");
    printf("=====================================\n");
@@ -90,7 +90,7 @@ void menu_produto(){
 void menu_funcionario(){
  int option;
  printf("\n=====================================\n");
- printf("=== <Menu Funcionario> ===\n");
+ printf("========= <Menu Funcionario> ========\n");
  printf("=====================================\n");
  printf("1 - Cadastra Funcionario Novo\n");
  printf("2 - Editar Cadastro\n");
@@ -104,7 +104,7 @@ void menu_funcionario(){
  switch(option){
   case 1:
    printf("\n=====================================\n");
-   printf("======== <Cadastro Funcionario> =======\n");
+   printf("======= <Cadastro Funcionario> ======\n");
    printf("=====================================\n");
    printf("1 - Nome do Funcionario:\n");
    printf("2 - CPF:\n");
@@ -118,7 +118,7 @@ void menu_funcionario(){
    break;
   case 2:
    printf("\n=====================================\n");
-   printf("== <Editar informação do Funcionario> =\n");
+   printf("==<Editar informação do Funcionario>=\n");
    printf("=====================================\n\n");
 
    printf("\n=====================================\n");
@@ -164,25 +164,27 @@ void menu_Entrada_Saida(){
  switch (option){
   case 1:
    printf("\n=====================================\n");
-   printf("===== <Entrada e Saida Produtos> =====\n");
+   printf("===== <Entrada e Saida Produtos> ====\n");
    printf("=====================================\n\n");
   break;
 
   case 2:
    printf("\n=====================================\n");
-   printf("=== <Entrada e Saida Funcionarios> ====\n");
+   printf("=== <Entrada e Saida Funcionarios> ==\n");
    printf("=====================================\n\n");
   break;
 
   case 3:
-   printf("\n=====================================\n");
-   printf("=== <Editar Entrada e Saida de funcionario> ====\n");
+   printf("\n===============================================\n");
+   printf("=== <Editar Entrada e Saida de funcionario> ===\n");
+   printf("\n===============================================\n");
    printf("Cpf do funcionario que ira editara entrada:\n");
    break;
 
   case 4:
-   printf("=====================================\n");
-   printf("=== <Remover Entrada ou Saida de Funcionario> ====\n");
+   printf("===================================================\n");
+   printf("=== <Remover Entrada ou Saida de Funcionario> ===\n");
+   printf("===================================================\n");
    printf("Cpf do funcionario que ira remover entrada:\n");
    break;
  }
