@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "funcionario.h"
+#include "entrada_saida.h"
+#include "produto.h"
 int menu = 0;
 
 int main(){
