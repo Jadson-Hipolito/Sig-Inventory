@@ -2,3 +2,5 @@
 #define FUNCIONARIO_H
 
 void menu_funcionario();
+
+#endif // FUNCIONARIO_H
