@@ -1,7 +1,7 @@
 #include "funcionario.h"
 #include <stdio.h>
 
-void menu_funcionario(){
+void menu_funcionario(void){
   int option;
   do {
   printf("\n=====================================\n");

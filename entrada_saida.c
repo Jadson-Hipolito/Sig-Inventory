@@ -1,7 +1,7 @@
 #include "entrada_saida.h"
 #include <stdio.h>
 
-void menu_Entrada_Saida(){
+void menu_Entrada_Saida(void){
  int option;
  do {
   printf("\n=====================================\n");

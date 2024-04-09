@@ -1,7 +1,7 @@
 #include "produto.h"
 #include <stdio.h>
 
-void menu_produto(){
+void menu_produto(void){
  int option;
  do {
   printf("\n=====================================\n");
