@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 void menu_funcionario(void){
-  int option;
+  int option = 5;
   do {
   printf("\n=====================================\n");
   printf("========= <Menu Funcionario> ========\n");
@@ -28,6 +28,10 @@ void menu_funcionario(void){
     break;
    case 4:
     excluir_funcionario();
+    break;
+   
+   default:
+    printf("Deve digitar um número");
     break;
   }
  } while (option != 0);  

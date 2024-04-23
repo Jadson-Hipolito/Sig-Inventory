@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 void menu_produto(){
- int option;
+ int option = 5;
  do {
   printf("\n=====================================\n");
   printf("========== <Menu Produtos> ==========\n");
@@ -28,6 +28,10 @@ void menu_produto(){
     break;
    case 4:
     listar_produto();
+    break;
+
+   default:
+    printf("Deve digitar um número");
     break;
   }
  } while (option != 0);

@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 void menu_entrada_saida_produto(void){
- int option;
+ int option = 5;
  do {
   printf("\n=====================================\n");
   printf("====== <Menu Entrada e Saida produto> =======\n");
@@ -31,6 +31,10 @@ void menu_entrada_saida_produto(void){
 
    case 4:
     confirma_entrada_saida_produto();
+    break;
+
+   default:
+    printf("Deve digitar um número");
     break;
   }
  } while (option != 0);

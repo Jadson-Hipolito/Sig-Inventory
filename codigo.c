@@ -3,9 +3,9 @@
 #include "entrada_saida_funcionario.h"
 #include "entrada_saida_produto.h"
 #include "produto.h"
-int menu = 0;
 
 int main(){
+ int menu = 5;
  do {
   printf("\n=====================================\n");
   printf("========= <Menu Inventario> =========\n");
@@ -31,6 +31,9 @@ int main(){
     break;
    case 4:
     menu_entrada_saida_produto();
+    break;
+   default:
+    printf("Deve digitar um número");
     break;
    }
  } while (menu != 0);
