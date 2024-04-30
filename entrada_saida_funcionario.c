@@ -4,9 +4,9 @@
 void menu_entrada_saida_funcionario(void){
  int option = 5;
  do {
-  printf("\n=====================================\n");
-  printf("====== <Menu Entrada e Saida funcionario> =======\n");
-  printf("=====================================\n");
+  printf("\n========================================\n");
+  printf("== <Menu Entrada e Saida funcionario> ==\n");
+  printf("========================================\n");
   printf("1 - Entradas e Saidas\n");
   printf("2 - Editar Entrada e Saida\n");
   printf("3 - Remover Entrada ou saida\n");
@@ -42,8 +42,8 @@ void menu_entrada_saida_funcionario(void){
 
 void entrada_saida_funcionario(void){
   printf("\n=====================================\n");
-  printf("===== <Entrada e Saida> ====\n");
-  printf("=====================================\n\n");
+  printf("========== <Entrada e Saida> ==========\n");
+  printf("=======================================\n\n");
 }
 
 void editar_entrada_saida_funcionario(void){
@@ -54,14 +54,14 @@ void editar_entrada_saida_funcionario(void){
 }
 
 void remove_entrada_saida_funcionario(void){
-  printf("===================================================\n");
+  printf("\n=================================================\n");
   printf("=== <Remover Entrada ou Saida de Funcionario> ===\n");
   printf("===================================================\n");
   printf("Cpf do funcionario que ira remover entrada:\n");
 }
 
 void confirma_entrada_saida_funcionario(void){
-  printf("===================================================\n");
+  printf("\n=================================================\n");
   printf("=== <Confirmar Entrada ou Saida de Funcionario> ===\n");
   printf("===================================================\n");
   printf("Cpf do funcionario que ira remover entrada:\n");

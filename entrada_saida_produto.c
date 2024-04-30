@@ -4,9 +4,9 @@
 void menu_entrada_saida_produto(void){
  int option = 5;
  do {
-  printf("\n=====================================\n");
+  printf("\n=============================================\n");
   printf("====== <Menu Entrada e Saida produto> =======\n");
-  printf("=====================================\n");
+  printf("=============================================\n");
   printf("1 - Entradas e Saidas\n");
   printf("2 - Editar Entrada e Saida\n");
   printf("3 - Remover Entrada ou saida\n");
@@ -41,8 +41,8 @@ void menu_entrada_saida_produto(void){
 }
 
 void entrada_saida_produto(void){
-  printf("\n=====================================\n");
-  printf("===== <Entrada e Saida> ====\n");
+  printf("\n===================================\n");
+  printf("======== <Entrada e Saida> ========\n");
   printf("=====================================\n\n");
 }
 
