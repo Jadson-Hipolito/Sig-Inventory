@@ -12,7 +12,17 @@ char fornecedor[50];
 int quantidade_reposicao = 0;
 char anotacao_armazenamento[100];
 
-
+struct Produto {
+    char nome_produto[50];
+    char codigo_produto[13];
+    int quantidade;
+    char tipo_produto[20];
+    char local_produto[5];
+    char fornecedor[50];
+    int quantidade_reposicao;
+    char anotacao_armazenamento[100];
+};
+struct Produto produto;
 
 void menu_produto(){
     int option = 5;
@@ -50,39 +60,51 @@ void menu_produto(){
     } while (option != 0);
 }
 
-void cadastro_produto(void){
+void cadastro_produto(void) {
     printf("\n=====================================\n");
     printf("======== <Cadastrar Produto> ========\n");
     printf("=====================================\n");
+
+    // Declaração de uma variável do tipo Produto
+    struct Produto produto;
+
     printf("1 - Nome do Produto:\n");
-    scanf("%s", nome_produto); 
+    scanf("%s", produto.nome_produto);
+
     printf("2 - Codigo UPC do produto:\n");
     do {
         printf("Digite o código UPC (12 dígitos): ");
-        scanf("%s", codigo_produto);
+        scanf("%s", produto.codigo_produto);
         getchar();
-        if (validar_upc(codigo_produto) != 1) {
+        if (validar_upc(produto.codigo_produto) != 1) {
             printf("Código UPC inválido. Tente novamente.\n");
         }
-    } while (validar_upc(codigo_produto) != 1);
+    } while (validar_upc(produto.codigo_produto) != 1);
+
     printf("3 - Quantidade Atual:\n");
-    scanf("%d", &quantidade); 
+    scanf("%d", &produto.quantidade);
     getchar();
+
     printf("4 - Tipo de Produto:\n");
-    scanf("%s", &tipo_produto);
+    scanf("%s", produto.tipo_produto);
     getchar();
+
     printf("5 - Local do Produto:\n");
-    scanf("%s", &local_produto);
+    scanf("%s", produto.local_produto);
     getchar();
+
     printf("6 - Fornecedor(Opcional):\n");
-    scanf("%s", &fornecedor);
+    scanf("%s", produto.fornecedor);
     getchar();
+
     printf("7 - Quantidade para pedir reposição (Opcional):\n");
-    scanf("%d", &quantidade_reposicao);
+    scanf("%d", &produto.quantidade_reposicao);
     getchar();
+
     printf("8 - Anotações de Armazenamento(Opcional):\n");
-    scanf("%s", &anotacao_armazenamento); 
+    scanf("%s", produto.anotacao_armazenamento);
     getchar();
+
     printf("=====================================\n");
 }
 
