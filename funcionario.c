@@ -13,6 +13,18 @@ char endereco_funcionario[100];
 int salario_funcionario = 0;
 char expediente_funcionario[50];
 
+struct Funcionario {
+    char nome[50];
+    char cpf[12];
+    char numero[10];
+    char cargo[50];
+    char endereco[100];
+    int salario;
+    char expediente[50];
+};
+
+struct Funcionario funcionario;
+
 void menu_funcionario(void){
   int option =5;
   do {
@@ -48,46 +60,49 @@ void menu_funcionario(void){
  } while (option != 0);  
 }
 
-void cadastro_funcionario(void){
+#include <stdio.h>
+
+void cadastro_funcionario(void) {
     printf("\n=====================================\n");
     printf("======= <Cadastro Funcionario> ======\n");
     printf("=====================================\n");
+
     printf("1 - Nome do Funcionario:\n");
-    scanf("%s", nome_funcionario);
+    scanf("%s", funcionario.nome);
     getchar(); // Limpa o buffer do teclado
 
     printf("2 - CPF:\n");
-    scanf("%s", cpf_funcionario);
+    scanf("%s", funcionario.cpf);
     getchar(); // Limpa o buffer do teclado
-    if (!validar_cpf(cpf_funcionario)) {
-      printf("CPF inválido. Tente novamente.\n");
-      return; // Retorna para evitar o cadastro de funcionário com CPF inválido
+    if (!validar_cpf(funcionario.cpf)) {
+        printf("CPF inválido. Tente novamente.\n");
+        return; // Retorna para evitar o cadastro de funcionário com CPF inválido
     }
 
     printf("3 - Numero:\n");
-    scanf("%s", numero_funcionario); // Corrigido para scanf("%s", numero_funcionario)
+    scanf("%s", funcionario.numero);
     getchar(); // Limpa o buffer do teclado
-    if (!verificar_telefone(numero_funcionario)) {
-      printf("Número inválido. Tente novamente.\n");
-      return; // Retorna para evitar o cadastro de funcionário com número inválido
+    if (!verificar_telefone(funcionario.numero)) {
+        printf("Número inválido. Tente novamente.\n");
+        return; // Retorna para evitar o cadastro de funcionário com número inválido
     }
 
     printf("4 - Cargo:\n");
-    scanf("%s", cargo_funcionario);
+    scanf("%s", funcionario.cargo);
     getchar(); // Limpa o buffer do teclado
 
     printf("5 - Salário:\n");
-    scanf("%lf", &salario_funcionario);
+    scanf("%d", &funcionario.salario);
     getchar(); // Limpa o buffer do teclado
 
     printf("6 - Expediente:\n");
-    scanf("%s", expediente_funcionario);
+    scanf("%s", funcionario.expediente);
     getchar(); // Limpa o buffer do teclado
 
     printf("7 - Endereço:\n");
-    scanf("%s", endereco_funcionario);
+    scanf("%s", funcionario.endereco);
     getchar(); // Limpa o buffer do teclado
-    if (!verificar_endereco(endereco_funcionario)) {
+    if (!verificar_endereco(funcionario.endereco)) {
         printf("Endereço inválido. Tente novamente.\n");
         return; // Retorna para evitar o cadastro de funcionário com endereço inválido
     }

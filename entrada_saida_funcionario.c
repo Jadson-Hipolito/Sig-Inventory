@@ -50,7 +50,7 @@ void editar_entrada_saida_funcionario(void){
   printf("\n===============================================\n");
   printf("=== <Editar Entrada e Saida de funcionario> ===\n");
   printf("\n===============================================\n");
-  printf("Cpf do funcionario que ira editara entrada:\n");
+  printf("Cpf do funcionario que ira editar entrada:\n");
 }
 
 void remove_entrada_saida_funcionario(void){
