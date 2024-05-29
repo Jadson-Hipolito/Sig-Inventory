@@ -4,23 +4,6 @@
 #include <string.h>
 #include "biblioteca_verificar.h"
 
-int validar_nome(const char *nome) {
-    if (nome == NULL || nome[0] == '\0') {
-        // Verifica se a string está vazia ou é NULL.
-        return 0;  // Nome inválido
-    }
-
-    for (int i = 0; nome[i] != '\0'; i++) {
-        // Verifica cada caractere da string.
-        if (!isalpha(nome[i]) && nome[i] != ' ') {
-            // Se não for uma letra ou um espaço, o nome é inválido.
-            return 0;  // Nome inválido
-        }
-    }
-
-    return 1;  // Nome válido
-}
-
 bool validar_cpf(const char *cpf) {
     if (cpf == NULL) {
         return false; // CPF inválido se for NULL
@@ -73,38 +56,32 @@ bool validar_cpf(const char *cpf) {
     return true; // CPF válido
 }
 
-// Função para verificar a estrutura básica de um endereço
 bool verificar_endereco(const char *endereco) {
     if (endereco == NULL) {
-        return false; // Endereço inválido se for NULL
+        return false;
     }
 
-    // Verifica se o endereço tem pelo menos um caractere
     if (strlen(endereco) == 0) {
-        return false; // Endereço inválido se estiver vazio
+        return false;
     }
 
-    // Adicione outras verificações conforme necessário, como verificar se contém números, nomes de rua, cidades, etc.
-
-    return true; // Endereço válido
+    return true; 
 }
 
 bool verificar_telefone(const char *telefone) {
     if (telefone == NULL) {
-        return false; // Telefone inválido se for NULL
+        return false; 
     }
 
-    // Verifica se o telefone tem exatamente 10 dígitos
     if (strlen(telefone) != 10) {
-        return false; // Telefone inválido se não tiver 10 dígitos
+        return false; 
     }
 
-    // Verifica se todos os caracteres são dígitos
     for (int i = 0; telefone[i] != '\0'; i++) {
         if (!isdigit(telefone[i])) {
-            return false; // Telefone inválido se contiver caracteres não numéricos
+            return false; 
         }
     }
 
-    return true; // Telefone válido
+    return true;
 }
