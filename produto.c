@@ -21,6 +21,7 @@ struct Produto {
     char fornecedor[50];
     int quantidade_reposicao;
     char anotacao_armazenamento[100];
+    bool stats;
 };
 struct Produto produto;
 

@@ -12,6 +12,7 @@ struct funcionario {
     int salario;
     char expediente[50];
     int stats;
+    bool stats;
 };
 
 typedef struct funcionario Funcionario;
