@@ -1,7 +1,9 @@
 #include "produto.h"
-#include <stdio.h>
+#include <ctype.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 char nome_produto[50];
 char codigo_produto[13];
@@ -12,18 +14,7 @@ char fornecedor[50];
 int quantidade_reposicao = 0;
 char anotacao_armazenamento[100];
 
-struct Produto {
-    char nome_produto[50];
-    char codigo_produto[13];
-    int quantidade;
-    char tipo_produto[20];
-    char local_produto[5];
-    char fornecedor[50];
-    int quantidade_reposicao;
-    char anotacao_armazenamento[100];
-    bool stats;
-};
-struct Produto produto;
+#define ARQUIVO_PRODUTOS "produto.txt"
 
 void menu_produto(){
     int option = 5;
@@ -42,7 +33,9 @@ void menu_produto(){
         getchar();
         switch(option){
             case 1:
-                cadastro_produto();
+                Produto* produto = (Produto *) malloc(sizeof(Produto));
+                cadastro_produto(produto);
+                gravar_produto(produto);
                 break;
             case 2:
                 excluir_produto();
@@ -59,51 +52,55 @@ void menu_produto(){
                 break;
         }
     } while (option != 0);
-}
+} 
 
-void cadastro_produto(void) {
+void cadastro_produto(Produto *produto) {
     printf("\n=====================================\n");
     printf("======== <Cadastrar Produto> ========\n");
     printf("=====================================\n");
 
-    // Declaração de uma variável do tipo Produto
-    struct Produto produto;
+    printf("Digite o nome do produto: ");
+    fgets(produto->nome_produto, 50, stdin);
+    produto->nome_produto[strcspn(produto->nome_produto, "\n")] = '\0';
 
-    printf("1 - Nome do Produto:\n");
-    scanf("%s", produto.nome_produto);
+    bool upc_valido = false;
+    while (!upc_valido) {
+      printf("Digite o UPC do produto: ");
+      fgets(produto->codigo_produto, 12, stdin);
+      produto->codigo_produto[strcspn(produto->codigo_produto, "\n")] = '\0';
 
-    printf("2 - Codigo UPC do produto:\n");
-    do {
-        printf("Digite o código UPC (12 dígitos): ");
-        scanf("%s", produto.codigo_produto);
-        getchar();
-        if (validar_upc(produto.codigo_produto) != 1) {
-            printf("Código UPC inválido. Tente novamente.\n");
-        }
-    } while (validar_upc(produto.codigo_produto) != 1);
+      upc_valido = validar_upc(produto->codigo_produto);
+      if (!upc_valido) {
+        printf("UPC invalido! Digite novamente.\n");
+      }
+    }
 
-    printf("3 - Quantidade Atual:\n");
-    scanf("%d", &produto.quantidade);
+    printf("Digite a quantidade do produto: ");
+    scanf("%d", &produto->quantidade);
     getchar();
 
-    printf("4 - Tipo de Produto:\n");
-    scanf("%s", produto.tipo_produto);
+    printf("Digite o tipo do produto: ");
+    fgets(produto->tipo_produto, 20, stdin);
+    produto->tipo_produto[strcspn(produto->tipo_produto, "\n")] = '\0';
+
+    printf("Digite o local do produto: ");
+    fgets(produto->local_produto, 5, stdin);
+    produto->local_produto[strcspn(produto->local_produto, "\n")] = '\0';
+
+    printf("Digite o fornecedor do produto (opcional): ");
+    fgets(produto->fornecedor, 50, stdin);
+    produto->fornecedor[strcspn(produto->fornecedor, "\n")] = '\0';
+
+    printf("Digite a quantidade do produto para avisar nescessidade de reposição (Opcional): ");
+    scanf("%d", &produto->quantidade_reposicao);
     getchar();
 
-    printf("5 - Local do Produto:\n");
-    scanf("%s", produto.local_produto);
-    getchar();
+    printf("Digite uma nota de armazenamento para o produto (opcional): ");
+    fgets(produto->anotacao_armazenamento, 50, stdin);
+    produto->anotacao_armazenamento[strcspn(produto->anotacao_armazenamento, "\n")] = '\0';
 
-    printf("6 - Fornecedor(Opcional):\n");
-    scanf("%s", produto.fornecedor);
-    getchar();
-
-    printf("7 - Quantidade para pedir reposição (Opcional):\n");
-    scanf("%d", &produto.quantidade_reposicao);
-    getchar();
-
-    printf("8 - Anotações de Armazenamento(Opcional):\n");
-    scanf("%s", produto.anotacao_armazenamento);
+    printf("Digite o status do produto (1 para ativo, 0 para inativo): ");
+    scanf("%d", &produto->stats);
     getchar();
 
     printf("=====================================\n");
@@ -163,4 +160,20 @@ int validar_upc(char *codigo) {
  else {
   return 0;
  }
+}
+
+int gravar_produto(Produto *produto){
+
+  FILE *fp;
+  fp = fopen(ARQUIVO_PRODUTOS, "at");
+  if (fp == NULL) {
+    printf("Erro na criacao do arquivo!\n");
+    return 0;
+  }
+  fprintf(fp,
+          "Nome: %s, codigo: %s, quantidade: %d, tipo do produto: %s, local do produto: %s, fornecedor: %s, quantidade de reposicao: %d, anotação de armazenamento: %s, status: %d\n",
+          produto->nome_produto, produto->codigo_produto, produto->quantidade,
+          produto->tipo_produto, produto->local_produto, produto->fornecedor, produto->quantidade_reposicao,
+          produto->anotacao_armazenamento, produto->stats);
+  fclose(fp);
 }

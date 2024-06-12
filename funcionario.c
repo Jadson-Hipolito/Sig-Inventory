@@ -102,7 +102,6 @@ void cadastro_funcionario(Funcionario *funcionario) {
 
   printf("Digite o salario do funcionario: ");
   scanf("%d", &funcionario->salario);
-
   getchar();
 
   printf("Digite o expediente do funcionario: ");
@@ -111,7 +110,6 @@ void cadastro_funcionario(Funcionario *funcionario) {
 
   printf("Digite o status do funcionario (1 para ativo, 0 para inativo): ");
   scanf("%d", &funcionario->stats);
-
   getchar();
 }
 
