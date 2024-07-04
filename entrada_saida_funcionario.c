@@ -44,6 +44,7 @@ void entrada_saida_funcionario(void){
   printf("\n=====================================\n");
   printf("========== <Entrada e Saida> ==========\n");
   printf("=======================================\n\n");
+  printf("Digite o cpf do funcionario");
 }
 
 void editar_entrada_saida_funcionario(void){

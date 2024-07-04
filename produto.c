@@ -5,45 +5,45 @@
 #include <string.h>
 #include <stdlib.h>
 
-char nome_produto[50];
-char codigo_produto[13];
-int quantidade = 0;
-char tipo_produto[20];
-char local_produto[5];
-char fornecedor[50];
-int quantidade_reposicao = 0;
-char anotacao_armazenamento[100];
-
 #define ARQUIVO_PRODUTOS "produto.txt"
+#define ARQUIVO_TIPOS "tipos.txt"
 
 void menu_produto(){
-    int option = 5;
+    int option = 99;
     do {
         printf("\n=====================================\n");
         printf("========== <Menu Produtos> ==========\n");
         printf("=====================================\n");
         printf("1 - Cadastra Produto Novo\n");
-        printf("2 - Excluir Produto\n");
-        printf("3 - Alterar Produto\n");
-        printf("4 - Listar Produtos\n");
+        printf("2 - Cadastra Novo Tipo de Produto\n");
+        printf("3 - Excluir Produto\n");
+        printf("4 - Alterar Produto\n");
+        printf("5 - Listar Produtos\n");
         printf("0 - Voltar para <Menu Inventario>\n");
         printf("=====================================\n");
         printf("Escolha uma opção: ");
         scanf("%d", &option);
         getchar();
         switch(option){
+            case 0:
+                break;
             case 1:
                 Produto* produto = (Produto *) malloc(sizeof(Produto));
                 cadastro_produto(produto);
                 gravar_produto(produto);
                 break;
             case 2:
-                excluir_produto();
+                Tipo* tipo = (Tipo *) malloc(sizeof(Tipo));
+                cadastro_tipo_produto(tipo);
+                gravar_tipo_produto(tipo);
                 break;
             case 3:
-                alterar_produto();
+                excluir_produto();
                 break;
             case 4:
+                alterar_produto();
+                break;
+            case 5:
                 listar_produto();
                 break;
 
@@ -66,8 +66,9 @@ void cadastro_produto(Produto *produto) {
     bool upc_valido = false;
     while (!upc_valido) {
       printf("Digite o UPC do produto: ");
-      fgets(produto->codigo_produto, 12, stdin);
+      fgets(produto->codigo_produto, 13, stdin);
       produto->codigo_produto[strcspn(produto->codigo_produto, "\n")] = '\0';
+      printf("%s\n", produto->codigo_produto);
 
       upc_valido = validar_upc(produto->codigo_produto);
       if (!upc_valido) {
@@ -99,11 +100,22 @@ void cadastro_produto(Produto *produto) {
     fgets(produto->anotacao_armazenamento, 50, stdin);
     produto->anotacao_armazenamento[strcspn(produto->anotacao_armazenamento, "\n")] = '\0';
 
-    printf("Digite o status do produto (1 para ativo, 0 para inativo): ");
-    scanf("%d", &produto->stats);
+    produto->stats = 1;
     getchar();
 
     printf("=====================================\n");
+}
+
+void cadastro_tipo_produto(Tipo *tipo) {
+    printf("\n=====================================\n");
+    printf("==== <Cadastrar Tipo de Produto> ====\n");
+    printf("=====================================\n");
+
+    printf("Digite o nome do tipo do produto: ");
+    fgets(tipo->nome, 45, stdin);
+    tipo->nome[strcspn(tipo->nome, "\n")] = '\0';
+
+    tipo->stats = 1;
 }
 
 void excluir_produto(void){
@@ -129,37 +141,50 @@ void alterar_produto(void){
   printf("6 - Anotações de Armazenamento:\n");
 }
 
-void listar_produto(void){
-  printf("\n=====================================\n");
-  printf("========= <Lista de Produto> ========\n");
-  printf("=====================================\n\n");
-  printf("1 - Lista de Produtos Cadastrados:\n");
-  printf("=====================================\n");
-  printf("=====================================\n");
-}
+bool validar_upc(const char *upc) {
+  if (strlen(upc) != 12) {
+    printf("UPC inválido (tamanho incorreto).\n");
+    printf("UPC: %s\n", upc);
+    return false;
+  }
 
-int validar_upc(char *codigo) {
- int soma = 0;
+  for (int i = 0; upc[i] != '\0'; i++) {
+    if (upc[i] != '/' && !isdigit(upc[i])) {
+      printf("UPC inválido (contem não digitos).\n");
+      return false;
+    }
+  }
 
- if (strlen(codigo) != 12) {
-  return 0;
- }
- for (int i = 0; i < 11; i += 2) {
-  soma += (codigo[i] - '0') * 3;
- }
- for (int i = 1; i < 11; i += 2) {
-  soma += (codigo[i] - '0');
- }
- int digito_verificacao = 10 - (soma % 10);
- if (digito_verificacao == 10) {
-  digito_verificacao = 0;
- }
- if (digito_verificacao == codigo[11] - '0') {
-  return 1;
- }
- else {
-  return 0;
- }
+  //Verificar item verificador
+
+  int som_impares;
+  int som_pares;
+  int dezena;
+  int verificador;
+  for (int i = 0; upc[i] == 10; i=i+2){
+    som_impares += upc[i];
+  }
+  som_impares = som_impares*3;
+  for (int i = 1; upc[i] == 9; i=i+2){
+    som_pares += upc[i];
+  }
+  int som_som = som_impares + som_pares;
+  if (som_som % 10 != 0) {
+    dezena = (som_som/10 + 1)*10;
+    verificador = dezena - som_som;
+  }
+  else {
+    verificador = 0;
+  }
+  if (((int)upc[11] - 48) != verificador){
+    for (int i = 0; upc[i] != '\0'; i++){
+     printf("upc:%d\n",upc[i]-48);
+    }
+    printf("Numero verificador dado %d, numero verificado do codigo %d\n", upc[11] - 48, verificador);
+    printf("UPC inválido (Numero verificador incorreto).\n");
+    return false;
+  }
+  return true;
 }
 
 int gravar_produto(Produto *produto){
@@ -177,3 +202,53 @@ int gravar_produto(Produto *produto){
           produto->anotacao_armazenamento, produto->stats);
   fclose(fp);
 }
+
+int gravar_tipo_produto(Tipo *tipo){
+
+  FILE *fp;
+  fp = fopen(ARQUIVO_TIPOS, "at");
+  if (fp == NULL) {
+    printf("Erro na criacao do arquivo!\n");
+    return 0;
+  }
+  fprintf(fp,
+          "Nome: %s, status: %d\n",
+          tipo->nome, tipo->stats);
+  fclose(fp);
+}
+
+int listar_produto(void)
+{
+  FILE *fp;
+  char letra;
+  char linha[320];
+  int cursorLinha = -1;
+
+
+  fp = fopen(ARQUIVO_PRODUTOS, "rt");
+  if (fp == NULL)
+  {
+      printf("Erro no acesso do arquivo\n!");
+      return 0;
+  }
+  printf("-------------------------- Lista de Produtos --------------------------------\n");
+  letra = fgetc(fp);
+  while (letra != EOF)
+  {
+      if(letra != '\n'){
+          linha[++cursorLinha] = letra;          
+      }else{
+          linha[++cursorLinha] = '\0';
+          printf("%s\n",linha);
+          for (int i = 0; i < cursorLinha; i++)
+          {
+              linha[i] = ' ';
+          }          
+          cursorLinha = -1;                   
+      }
+      letra = fgetc(fp);
+  }
+  printf("---------------------------------------------------------------------------\n");
+  fclose(fp);
+  getchar();
+};

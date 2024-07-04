@@ -1,0 +1,9 @@
+Nome: Frutas, vegetais, grãos e leguminosas, status: 1
+Nome: Padaria, status: 1
+Nome: Frios e produtos refrigerados, status: 1
+Nome: Sorvetes e congelados, status: 1
+Nome: Bebidas, status: 1
+Nome: Higiene pessoal, status: 1
+Nome: Doces e guloseimas, status: 1
+Nome: Alimentos não perecíveis, status: 1
+Nome: Limpeza, status: 1

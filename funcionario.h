@@ -4,9 +4,9 @@
 // struct Funcionario *funcionario;
 
 struct funcionario {
-    char nome[50];
     char cpf[12];
-    char numero[10];
+    char nome[50];
+    char numero[11];
     char cargo[50];
     char endereco[100];
     int salario;
@@ -21,6 +21,7 @@ void cadastro_funcionario(Funcionario *);
 int gravar_funcionario(Funcionario *);
 void editar_funcionario(void);
 void excluir_funcionario(void);
-void listar_funcionario(void);
+int lista_arquivo_funcionario();
+Funcionario* buscar_funcionario(char[12]);
 
 #endif

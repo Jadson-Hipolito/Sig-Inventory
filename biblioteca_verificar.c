@@ -69,19 +69,20 @@ bool verificar_endereco(const char *endereco) {
 }
 
 bool verificar_telefone(const char *telefone) {
-    if (telefone == NULL) {
-        return false; 
+    printf("%s\n", telefone);
+    int tamanho = strlen(telefone);
+    
+    // Verifica o comprimento da string
+    if(tamanho != 10) {
+        return false; // Tamanho inválido
     }
-
-    if (strlen(telefone) != 10) {
-        return false; 
-    }
-
-    for (int i = 0; telefone[i] != '\0'; i++) {
-        if (!isdigit(telefone[i])) {
-            return false; 
+    
+    // Verifica se todos os caracteres são dígitos
+    for(int i = 0; i < tamanho; i++) {
+        if(!isdigit(telefone[i])) {
+            return false; // Encontrou um caractere não dígito
         }
     }
-
-    return true;
+    
+    return true; // Telefone válido
 }

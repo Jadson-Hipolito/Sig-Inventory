@@ -9,7 +9,7 @@
 
 char nome_funcionario[50];
 char cpf_funcionario[12];
-char numero_funcionario[10];
+char numero_funcionario[11];
 char cargo_funcionario[50];
 char endereco_funcionario[100];
 int salario_funcionario = 0;
@@ -27,7 +27,8 @@ void menu_funcionario(void) {
     printf("1 - Cadastra Funcionario Novo\n");
     printf("2 - Editar Cadastro\n");
     printf("3 - Listar Funcionarios\n");
-    printf("4 - Excluir Funcionario\n");
+    printf("4 - Buscar Funcionario");
+    printf("5 - Excluir Funcionario\n");
     printf("0 - Voltar para <Menu Inventario>\n");
     printf("=====================================\n");
     printf("Escolha uma opção: ");
@@ -43,9 +44,15 @@ void menu_funcionario(void) {
       editar_funcionario();
       break;
     case 3:
-      listar_funcionario();
+      lista_arquivo_funcionario();
       break;
     case 4:
+      char cpf[12];
+      printf("Digite o cpf do funcionario, o qual deseja buscar (só numeros):");
+      fgets(cpf, 12, stdin);
+      buscar_funcionario(cpf);
+      break;
+    case 5:
       excluir_funcionario();
       break;
     default:
@@ -71,11 +78,12 @@ void cadastro_funcionario(Funcionario *funcionario) {
       printf("CPF invalido! Digite novamente.\n");
     }
   }
+  getchar();
 
   bool telefone_valido = false;
   while (!telefone_valido) {
     printf("Digite o numero de telefone do funcionario: ");
-    fgets(funcionario->numero, 10, stdin);
+    fgets(funcionario->numero, 11, stdin);
     funcionario->numero[strcspn(funcionario->numero, "\n")] = '\0';
 
     telefone_valido = verificar_telefone(funcionario->numero);
@@ -83,7 +91,8 @@ void cadastro_funcionario(Funcionario *funcionario) {
       printf("Numero de telefone invalido! Digite novamente.\n");
     }
   }
-
+  getchar();
+  
   printf("Digite o cargo do funcionario: ");
   fgets(funcionario->cargo, 50, stdin);
   funcionario->cargo[strcspn(funcionario->cargo, "\n")] = '\0';
@@ -122,9 +131,9 @@ int gravar_funcionario(Funcionario *funcionario) {
     return 0;
   }
   fprintf(fp,
-          "Nome: %s, CPF: %s, Numero: %s, Cargo: %s, Endereco: %s, Salario: "
+          "CPF: %s, Nome: %s, Numero: %s, Cargo: %s, Endereco: %s, Salario: "
           "%d, Expediente: %s, Status: %d\n",
-          funcionario->nome, funcionario->cpf, funcionario->numero,
+          funcionario->cpf, funcionario->nome, funcionario->numero,
           funcionario->cargo, funcionario->endereco, funcionario->salario,
           funcionario->expediente, funcionario->stats);
   fclose(fp);
@@ -159,4 +168,59 @@ void excluir_funcionario(void) {
   printf("=====================================\n\n");
 
   printf("Confirmar Exclusão:\n");
+}
+
+int lista_arquivo_funcionario()
+{
+  FILE *fp;
+  char letra;
+  char linha[320];
+  int cursorLinha = -1;
+
+
+  fp = fopen(ARQUIVO_FUNCIONARIOS, "rt");
+  if (fp == NULL)
+  {
+      printf("Erro no acesso do arquivo\n!");
+      return 0;
+  }
+  printf("-------------------------- Lista de Funcionarios --------------------------------\n");
+  letra = fgetc(fp);
+  while (letra != EOF)
+  {
+      if(letra != '\n'){
+          linha[++cursorLinha] = letra;          
+      }else{
+          linha[++cursorLinha] = '\0';
+          printf("%s\n",linha);
+          for (int i = 0; i < cursorLinha; i++)
+          {
+              linha[i] = ' ';
+          }          
+          cursorLinha = -1;                   
+      }
+      letra = fgetc(fp);
+  }
+  printf("---------------------------------------------------------------------------\n");
+  fclose(fp);
+};
+
+Funcionario* buscar_funcionario(char cpf[12]){
+    FILE *fp;
+    Funcionario *funcionario = (Funcionario *)malloc(sizeof(Funcionario));
+    fp = fopen(ARQUIVO_FUNCIONARIOS, "rb");
+    if (fp == NULL)
+    {
+        printf("Erro no acesso do arquivo\n!");
+        return 0;
+    }
+    while (fread(funcionario, sizeof(Funcionario), 1, fp))
+    {
+        if(funcionario->cpf == cpf){
+            fclose(fp);
+            return funcionario;
+        }
+    }
+    fclose(fp);
+    return NULL;
 }
