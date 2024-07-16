@@ -1,2 +1,1 @@
-Nome: Ketchup, codigo: 010203040505, quantidade: 53, tipo do produto: Condimento, local do produto: 15A, fornecedor: James Carter, quantidade de reposicao: 27, anotação de armazenamento: ---, status: 1
-Nome: Jornal, codigo: 020304050600, quantidade: 189, tipo do produto: Leitura, local do produto: B12, fornecedor: JJJ, quantidade de reposicao: 25, anotação de armazenamento: Não colocar em locais umidos, nem ventilados., status: 1
+Nome: Mac Lanche, codigo: 010203040500, quantidade: 152, tipo do produto: congelados, local do produto: F2L5, fornecedor: , quantidade de reposicao: 15, anotação de armazenamento: 5, status: 1

@@ -26,9 +26,19 @@ void cadastro_produto(Produto *);
 void cadastro_tipo_produto(Tipo *);
 int gravar_produto(Produto *);
 int gravar_tipo_produto(Tipo *);
-void excluir_produto(void);
-void alterar_produto(void);
+int excluir_produto(char);
+int menu_buscar_produto(void);
 int listar_produto(void);
 bool validar_upc(const char *upc);
+int atualiza_produto(Produto *);
+void atualizar_nome_produto(Produto *);
+void atualizar_quantidade(Produto *);
+void atualizar_tipo_produto(Produto *);
+void atualizar_local_produto(Produto *);
+void atualizar_fornecedor(Produto *);
+void atualizar_quantidade_reposicao(Produto *);
+void atualizar_anotacoes(Produto *);
+Produto* buscar_produto(char *);
+void exibir_produto(Produto *);
 
 #endif
