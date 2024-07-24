@@ -1,1 +1,0 @@
-Nome: Mac Lanche, codigo: 010203040500, quantidade: 152, tipo do produto: congelados, local do produto: F2L5, fornecedor: , quantidade de reposicao: 15, anotação de armazenamento: 5, status: 1

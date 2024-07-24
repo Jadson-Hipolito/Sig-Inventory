@@ -1,3 +1,0 @@
-Nome: Clark Kent, CPF: 00000000000, Numero: 1234567890, Cargo: Segurança, Endereco: Bairro Metropolitano, rua Smallville, casa Noº 5, Salario: 57034, Expediente: 90, Status: 1
-Nome: Bruce Wayne, CPF: 00000000000, Numero: 2813531545, Cargo: Gerente, Endereco: Bairro Gotham, rua Wayne, casa Noº 1, Salario: 1000000, Expediente: 00, Status: 1
-Nome: Jadson, CPF: 13054535495, Numero: 8400000000, Cargo: presidente, Endereco: 6d4, Salario: 8500, Expediente: 54f, Status: 0

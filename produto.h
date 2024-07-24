@@ -40,5 +40,6 @@ void atualizar_quantidade_reposicao(Produto *);
 void atualizar_anotacoes(Produto *);
 Produto* buscar_produto(char *);
 void exibir_produto(Produto *);
+void reativar_produto(void);
 
 #endif
