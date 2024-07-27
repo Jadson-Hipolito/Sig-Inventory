@@ -16,10 +16,9 @@ void menu_produto(){
         printf("========== <Menu Produtos> ==========\n");
         printf("=====================================\n");
         printf("1 - Cadastra Produto Novo\n");
-        printf("2 - Cadastra Novo Tipo de Produto\n");
-        printf("3 - Buscar Produto\n");
-        printf("4 - Listar Produtos\n");
-        printf("5 - Reativar Cadastro de um Produto\n");
+        printf("2 - Buscar Produto\n");
+        printf("3 - Listar Produtos\n");
+        printf("4 - Reativar Cadastro de um Produto\n");
         printf("0 - Voltar para <Menu Inventario>\n");
         printf("=====================================\n");
         printf("Escolha uma opção: ");
@@ -34,11 +33,6 @@ void menu_produto(){
                 gravar_produto(produtoy);
                 break;
             case 2:
-                Tipo* tipo = (Tipo *) malloc(sizeof(Tipo));
-                cadastro_tipo_produto(tipo);
-                gravar_tipo_produto(tipo);
-                break;
-            case 3:
               char codigo_produto[13] = "0";
               printf("Informe a codigo UPC do produto: ");
               scanf("%s", codigo_produto);
@@ -91,11 +85,11 @@ void menu_produto(){
               break;
               }
               break;
-            case 4:
+            case 3:
               listar_produto();
               break;
 
-            case 5:
+            case 4:
               reativar_produto();
               break;
               
@@ -157,18 +151,6 @@ void cadastro_produto(Produto *produto) {
     produto->stats = 1;
 
     printf("=====================================\n");
-};
-
-void cadastro_tipo_produto(Tipo *tipo) {
-    printf("\n=====================================\n");
-    printf("==== <Cadastrar Tipo de Produto> ====\n");
-    printf("=====================================\n");
-
-    printf("Digite o nome do tipo do produto: ");
-    fgets(tipo->nome, 45, stdin);
-    tipo->nome[strcspn(tipo->nome, "\n")] = '\0';
-
-    tipo->stats = 1;
 };
 
 int menu_buscar_produto(void){
@@ -249,20 +231,6 @@ int gravar_produto(Produto *produtox){
     fwrite(produtox,sizeof(Produto),1,fp);
     fclose(fp);
     return 1;
-};
-
-int gravar_tipo_produto(Tipo *tipo){
-
-  FILE *fp;
-  fp = fopen(ARQUIVO_TIPOS, "at");
-  if (fp == NULL) {
-    printf("Erro na criacao do arquivo!\n");
-    return 0;
-  }
-  fprintf(fp,
-          "Nome: %s, status: %d\n",
-          tipo->nome, tipo->stats);
-  fclose(fp);
 };
 
 int listar_produto(void){

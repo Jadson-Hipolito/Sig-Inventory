@@ -1,5 +1,6 @@
 #include "funcionario.h"
 #include "biblioteca_verificar.h"
+#include "util.h"
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -16,7 +17,7 @@ void menu_funcionario(void) {
     printf("========= <Menu Funcionario> ========\n");
     printf("=====================================\n");
     printf("1 - Cadastra Funcionario Novo\n");
-    printf("2 - Editar Cadastro\n");
+    printf("2 - Cadastrar Novo Cargo\n");
     printf("3 - Buscar Funcionarios\n");
     printf("4 - Listar Funcionario");
     printf("5 - Excluir Funcionario\n");
@@ -25,6 +26,7 @@ void menu_funcionario(void) {
     printf("Escolha uma opção: ");
     scanf("%d", &option);
     getchar();
+    if (isdigit(option))
     switch (option) {
     case 1:
       Funcionario *funcionario_cad = (Funcionario *) malloc(sizeof(Funcionario));
@@ -32,7 +34,7 @@ void menu_funcionario(void) {
       gravar_funcionario(funcionario_cad);
       break;
     case 2:
-      editar_funcionario();
+      cadastrar_cargo();
       break;
     case 3:
       char cpf[12] = "0";
@@ -42,42 +44,58 @@ void menu_funcionario(void) {
       Funcionario *funcionario_busc = buscar_funcionario(cpf);
       if ((funcionario_busc != NULL) && (*funcionario_busc->cpf == 1)){
         exibir_funcionario(funcionario_busc);
-        int editar = menu_buscar_funcionario();
-        switch (editar){
-          case 1:
-            getchar();
-            atualizar_nome_funcionario(funcionario_busc);
-            if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");
-            break;
-          case 2:
-            atualizar_numero(funcionario_busc); 
-            if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
-            break;
-          case 3:
-            atualizar_cargo(funcionario_busc); 
-            if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
-            break;
-          case 4:
-            atualizar_endereco(funcionario_busc); 
-            if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
-            break;
-          case 5:
-            atualizar_salario(funcionario_busc); 
-            if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
-            break;
-          case 6:
-            atualizar_expediente(funcionario_busc); 
-            if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
-            break;
-          case 7:
-            funcionario_busc->stats = 0;
-            if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");
-            break;
-          case 8:
-            if(excluir_funcionario(*funcionario_busc->cpf)) printf("Funcionario excluído!!\n");
-            break;
-          default:
-            break;
+        int edit = 99;
+        printf("Deseja editar o funcionario? ");
+        scanf("%s", &edit);
+        getchar();
+        if(edit = 1){
+          int editar = 0;
+          if(comparar_senha(funcionario_busc) == true){
+            editar = menu_buscar_funcionario();
+          }
+          else{
+            printf("Senha Incorreta!");
+            delay(2);
+          }
+          switch (editar){
+            case 0:
+              break;
+            case 1:
+              getchar();
+              atualizar_nome_funcionario(funcionario_busc);
+              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");
+              break;
+            case 2:
+              atualizar_numero(funcionario_busc); 
+              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              break;
+            case 3:
+              atualizar_cargo(funcionario_busc); 
+              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              break;
+            case 4:
+              atualizar_endereco(funcionario_busc); 
+              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              break;
+            case 5:
+              atualizar_salario(funcionario_busc); 
+              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              break;
+            case 6:
+              atualizar_expediente(funcionario_busc); 
+              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              break;
+            case 7:
+              funcionario_busc->stats = 0;
+              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");
+              break;
+            case 8:
+              if(excluir_funcionario(*funcionario_busc->cpf)) printf("Funcionario excluído!!\n");
+              break;
+            default:
+              printf("Digite um número valido\n");
+              break;
+          }
         }
         break;
       }
@@ -139,6 +157,20 @@ void cadastro_funcionario(Funcionario *funcionario) {
   fgets(funcionario->expediente, 50, stdin);
   funcionario->expediente[strcspn(funcionario->expediente, "\n")] = '\0';
 
+  bool senha_segura = false;
+  while (!senha_segura) {
+    printf("Digite a senha do funcionario (Minimo 8 digitos, Maximo 20 digitos, ao menos uma letra e um número): ");
+    fgets(funcionario->password, 21, stdin);
+    funcionario->password[strcspn(funcionario->password, "\n")] = '\0';
+    printf("%s\n", funcionario->password);
+
+    senha_segura = validar_senha(funcionario->cpf);
+    if (!cpf_valido) {
+      printf("senha invalida! Digite novamente.\n");
+    }
+  }
+  getchar();
+
   funcionario->stats = 1;
 
   printf("=====================================\n");
@@ -157,25 +189,6 @@ int gravar_funcionario(Funcionario *funcionario_grav){
     fclose(fp);
     return 1;
 };
-
-void editar_funcionario(void) {
-  printf("\n=====================================\n");
-  printf("==<Editar informação do Funcionario>=\n");
-  printf("=====================================\n\n");
-
-  printf("\n=====================================\n");
-  printf("== Cpf do funcionario que ira editar:\n");
-  printf("=====================================\n\n");
-
-  printf("1 - Nome do Funcionario:\n");
-  printf("2 - Numero:\n");
-  printf("3 - Cargo:\n");
-  printf("4 - Salário:\n");
-  printf("5 - Espediente:\n");
-  printf("6 - Endereço:\n");
-  printf("0 - Voltar:\n");
-  printf("=====================================\n");
-}
 
 int excluir_funcionario(char cpf){
     FILE *fleitura;
@@ -279,8 +292,8 @@ int menu_buscar_funcionario(void){
   printf("7 - Desativar funcionario (Exclusão temporaria):\n");
   printf("8 - Exclusão completa do funcionario:\n");
   printf("0 - Retornar:\n");
-  scanf("%d", &option);
-  getchar;
+  scanf("%s", &option);
+  getchar();
   return option;
 };
 
@@ -341,4 +354,38 @@ int atualizar_funcionario(Funcionario *funcionario_busc){
 	}
 	fclose(fp);
 	free(produto_lido);
+};
+
+bool comparar_senha(Funcionario *funcionario_checar){
+  char password[21];
+  printf("Digite a senha do funcionario, %s:", funcionario_checar->nome);
+  fgets(password, 21, stdin);
+  password[strcspn(password, "\n")] = '\0';
+  if((strcmp(funcionario_checar->password, password) || verificar_senha_de_emergencia(password))){
+    return true;
+  }
+  return false;
+};
+
+bool verificar_senha_de_emergencia(char *password){
+  if (strcmp(senha_mestre, password)) {
+    return true;
+  }
+  FILE *fp;
+    Funcionario *funcionario = (Funcionario *)malloc(sizeof(Funcionario));
+    fp = fopen(ARQUIVO_FUNCIONARIOS, "rb");
+    if (fp == NULL)
+    {
+        printf("Erro no acesso do arquivo\n!");
+        return NULL;
+    }
+    while (fread(funcionario, sizeof(Funcionario), 1, fp))
+    {
+        if(strcmp(funcionario->cargo, "Gerente") == 0){
+            fclose(fp);
+            return true;
+        }
+    }
+    fclose(fp);
+    return NULL;
 };

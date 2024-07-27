@@ -71,18 +71,47 @@ bool verificar_endereco(const char *endereco) {
 bool verificar_telefone(const char *telefone) {
     printf("%s\n", telefone);
     int tamanho = strlen(telefone);
-    
-    // Verifica o comprimento da string
+
     if(tamanho != 10) {
-        return false; // Tamanho inválido
+        return false;
     }
     
-    // Verifica se todos os caracteres são dígitos
     for(int i = 0; i < tamanho; i++) {
         if(!isdigit(telefone[i])) {
-            return false; // Encontrou um caractere não dígito
+            return false;
         }
     }
     
     return true; // Telefone válido
+}
+
+bool verificar_senha(const char *password){
+  int letra = 0;
+  int num = 0;
+  printf("%s\n", password);
+  int tamanho = strlen(password);
+
+  if(tamanho != 8) {
+  return false;
+  }
+
+  for(int i = 0; i < tamanho && letra < 1; i++) {
+    if(!isdigit(password[i])) {
+      letra += 1;
+    }
+  }
+  if (letra < 1){
+    return false;
+  }
+
+  for(int i = 0; i < tamanho && letra < 1; i++) {
+    if(isdigit(password[i])) {
+      num += 1;
+    }
+  }
+  if (num < 1){
+    return false;
+  }
+  return true;
+  
 }

@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include <string.h>
 #include "funcionario.h"
-#include "entrada_saida_funcionario.h"
 #include "entrada_saida_produto.h"
 #include "produto.h"
 #include "biblioteca_verificar.h"

@@ -15,17 +15,9 @@ struct produto {
 };
 typedef struct produto Produto;
 
-struct tipo {
-    char nome[45];
-    int stats;
-};
-typedef struct tipo Tipo;
-
 void menu_produto(void);
 void cadastro_produto(Produto *);
-void cadastro_tipo_produto(Tipo *);
 int gravar_produto(Produto *);
-int gravar_tipo_produto(Tipo *);
 int excluir_produto(char);
 int menu_buscar_produto(void);
 int listar_produto(void);
