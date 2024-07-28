@@ -22,12 +22,6 @@ char senha_mestre[21];
 
 typedef struct funcionario Funcionario;
 
-struct cargo {
-    char nome[45];
-    int stats;
-};
-typedef struct cargo Cargo;
-
 void menu_funcionario(void);
 void cadastro_funcionario(Funcionario *);
 int gravar_funcionario(Funcionario *);

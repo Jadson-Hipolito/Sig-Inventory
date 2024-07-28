@@ -29,8 +29,8 @@ void menu_cargo(void){
         break;
       case 1:
         Cargo *cargo_cad = (Cargo *) malloc(sizeof(Cargo));
-        cadastro_tipo_produto(cargo_cad);
-        gravar_tipo_produto(cargo_cad);
+        cadastrar_cargo(cargo_cad);
+        gravar_cargo(cargo_cad);
         break;
       case 2:
         buscar_cargo();
