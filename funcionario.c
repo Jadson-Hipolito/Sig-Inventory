@@ -17,10 +17,9 @@ void menu_funcionario(void) {
     printf("========= <Menu Funcionario> ========\n");
     printf("=====================================\n");
     printf("1 - Cadastra Funcionario Novo\n");
-    printf("2 - Cadastrar Novo Cargo\n");
-    printf("3 - Buscar Funcionarios\n");
-    printf("4 - Listar Funcionario");
-    printf("5 - Excluir Funcionario\n");
+    printf("2 - Buscar Funcionarios\n");
+    printf("3 - Listar Funcionario");
+    printf("4 - Excluir Funcionario\n");
     printf("0 - Voltar para <Menu Inventario>\n");
     printf("=====================================\n");
     printf("Escolha uma opção: ");
@@ -34,9 +33,6 @@ void menu_funcionario(void) {
       gravar_funcionario(funcionario_cad);
       break;
     case 2:
-      cadastrar_cargo();
-      break;
-    case 3:
       char cpf[12] = "0";
       printf("Informe o cpf do funcionario: ");
       scanf("%s", cpf);
@@ -46,7 +42,7 @@ void menu_funcionario(void) {
         exibir_funcionario(funcionario_busc);
         int edit = 99;
         printf("Deseja editar o funcionario? ");
-        scanf("%s", &edit);
+        scanf("%d", &edit);
         getchar();
         if(edit = 1){
           int editar = 0;
@@ -164,7 +160,7 @@ void cadastro_funcionario(Funcionario *funcionario) {
     funcionario->password[strcspn(funcionario->password, "\n")] = '\0';
     printf("%s\n", funcionario->password);
 
-    senha_segura = validar_senha(funcionario->cpf);
+    senha_segura = verificar_senha(funcionario->cpf);
     if (!cpf_valido) {
       printf("senha invalida! Digite novamente.\n");
     }
@@ -292,7 +288,7 @@ int menu_buscar_funcionario(void){
   printf("7 - Desativar funcionario (Exclusão temporaria):\n");
   printf("8 - Exclusão completa do funcionario:\n");
   printf("0 - Retornar:\n");
-  scanf("%s", &option);
+  scanf("%d", &option);
   getchar();
   return option;
 };

@@ -13,5 +13,6 @@ void cadastrar_cargo(Cargo *);
 int listar_cargos(void);
 int gravar_cargo(Cargo *);
 int excluir_cargo(char);
+Cargo* buscar_cargo(char [45]);
 
 #endif

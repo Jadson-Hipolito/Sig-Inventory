@@ -18,7 +18,7 @@ void menu_tipo_produto(void){
     printf("1 - Cadastra Tipo Produto\n");
     printf("2 - Buscar Tipo de Troduto\n");
     printf("3 - Listar Tipos de Produtp\n");
-    printf("4 - Reativar Cadastro de um Tipo\n");
+    printf("4 - Excluir Cadastro de um Tipo\n");
     printf("0 - Voltar para <Menu Inventario>\n");
     printf("=====================================\n");
     printf("Escolha uma opção: ");
@@ -33,10 +33,17 @@ void menu_tipo_produto(void){
         gravar_tipo_produto(tipo_cad);
         break;
       case 2:
-        buscar_tipo();
+        char nome[45];
+        printf("Digite o nome do tipo de produto a ser excluido\n");
+        fgets(nome, 45, stdin);
+        nome[strcspn(nome, "\n")] = '\0';
+        Tipo *tipo_excluir = buscar_tipo_produto(nome);
+        excluir_tipo_produto(*tipo_excluir->nome);
         break;
       case 3:
         listar_tipo_produto();
+        break;
+      case 4:
         break;
 
       default:
@@ -95,7 +102,7 @@ int gravar_tipo_produto(Tipo *tipo){
   fclose(fp);
 };
 
-int excluir_tipo(char nome){
+int excluir_tipo_produto(char nome){
     FILE *fleitura;
     FILE *fescrita;
     Tipo *auxiliarLeitura = (Tipo *) malloc(sizeof(Tipo));
@@ -126,6 +133,22 @@ int excluir_tipo(char nome){
     return 1;
 };
 
-int buscar_tipo(void){
-    
-}
+Tipo* buscar_tipo_produto(char *nome){
+    FILE *fp;
+    Tipo *tipo = (Tipo *)malloc(sizeof(Tipo));
+    fp = fopen(ARQUIVO_TIPOS, "rb");
+    if (fp == NULL)
+    {
+        printf("Erro no acesso do arquivo\n!");
+        return NULL;
+    }
+    while (fread(tipo, sizeof(Tipo), 1, fp))
+    {
+        if(strcmp(tipo->nome, nome) == 0){
+            fclose(fp);
+            return tipo;
+        }
+    }
+    fclose(fp);
+    return NULL;
+};

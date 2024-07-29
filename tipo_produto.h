@@ -12,6 +12,7 @@ void menu_tipo_produto(void);
 void cadastro_tipo_produto(Tipo *);
 int listar_tipo_produto(void);
 int gravar_tipo_produto(Tipo *);
+Tipo* buscar_tipo_produto(char [45]);
 int excluir_tipo_produto(char);
 
 #endif

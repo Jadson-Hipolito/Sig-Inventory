@@ -16,9 +16,8 @@ void menu_cargo(void){
     printf("============ <Menu Cargos> ===========\n");
     printf("======================================\n");
     printf("1 - Cadastra cargo\n");
-    printf("2 - Buscar/Excluir Cargo\n");
+    printf("2 - Excluir Cargo\n");
     printf("3 - Listar Cargos\n");
-    printf("4 - Reativar Cadastro de um Cargo\n");
     printf("0 - Voltar para <Menu Inventario>\n");
     printf("======================================\n");
     printf("Escolha uma opção: ");
@@ -33,7 +32,12 @@ void menu_cargo(void){
         gravar_cargo(cargo_cad);
         break;
       case 2:
-        buscar_cargo();
+        char nome[45];
+        printf("Digite o nome do cargo a ser excluido\n");
+        fgets(nome, 45, stdin);
+        nome[strcspn(nome, "\n")] = '\0';
+        Cargo *cargo_excluir = buscar_cargo(nome);
+        excluir_cargo(*cargo_excluir->nome);
         break;
       case 3:
         listar_cargos();
@@ -126,6 +130,22 @@ int excluir_cargo(char nome){
     return 1;
 };
 
-int buscar_tipo(void){
-    
-}
+Cargo* buscar_cargo(char *nome){
+    FILE *fp;
+    Cargo *cargo = (Cargo *)malloc(sizeof(Cargo));
+    fp = fopen(ARQUIVO_CARGOS, "rb");
+    if (fp == NULL)
+    {
+        printf("Erro no acesso do arquivo\n!");
+        return NULL;
+    }
+    while (fread(cargo, sizeof(Cargo), 1, fp))
+    {
+        if(strcmp(cargo->nome, nome) == 0){
+            fclose(fp);
+            return cargo;
+        }
+    }
+    fclose(fp);
+    return NULL;
+};
