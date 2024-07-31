@@ -1,5 +1,6 @@
 #include "funcionario.h"
 #include "biblioteca_verificar.h"
+#include "cargo.h"
 #include "util.h"
 #include <ctype.h>
 #include <stdbool.h>
@@ -18,98 +19,109 @@ void menu_funcionario(void) {
     printf("=====================================\n");
     printf("1 - Cadastra Funcionario Novo\n");
     printf("2 - Buscar Funcionarios\n");
-    printf("3 - Listar Funcionario");
-    printf("4 - Excluir Funcionario\n");
+    printf("3 - Listar Funcionario\n");
+    printf("4 - Reativar Funcionario\n");
     printf("0 - Voltar para <Menu Inventario>\n");
     printf("=====================================\n");
     printf("Escolha uma opção: ");
     scanf("%d", &option);
     getchar();
-    if (isdigit(option))
     switch (option) {
-    case 1:
-      Funcionario *funcionario_cad = (Funcionario *) malloc(sizeof(Funcionario));
-      cadastro_funcionario(funcionario_cad);
-      gravar_funcionario(funcionario_cad);
-      break;
-    case 2:
-      char cpf[12] = "0";
-      printf("Informe o cpf do funcionario: ");
-      scanf("%s", cpf);
-      getchar();
-      Funcionario *funcionario_busc = buscar_funcionario(cpf);
-      if ((funcionario_busc != NULL) && (*funcionario_busc->cpf == 1)){
-        exibir_funcionario(funcionario_busc);
-        int edit = 99;
-        printf("Deseja editar o funcionario? ");
-        scanf("%d", &edit);
+      case 1:
+        Funcionario *funcionario_cad = (Funcionario *) malloc(sizeof(Funcionario));
+        cadastro_funcionario(funcionario_cad);
+        limpaTela();
+        break;
+      case 2:
+        char cpf[12] = "0";
+        printf("Informe o cpf do funcionario: ");
+        scanf("%s", cpf);
         getchar();
-        if(edit = 1){
-          int editar = 0;
-          if(comparar_senha(funcionario_busc) == true){
-            editar = menu_buscar_funcionario();
-          }
-          else{
-            printf("Senha Incorreta!");
-            delay(2);
-          }
+        delay(1500);
+        limpaTela();
+        Funcionario *funcionario_busc = buscar_funcionario(cpf);
+        exibir_funcionario(funcionario_busc);
+        if ((funcionario_busc != NULL) && (strcmp(funcionario_busc->cpf, cpf) == 0)){
+          exibir_funcionario(funcionario_busc);
+          int editar = menu_buscar_funcionario();
           switch (editar){
             case 0:
               break;
             case 1:
               getchar();
               atualizar_nome_funcionario(funcionario_busc);
-              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");
+              if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              delay(2000);
+              limpaTela();
               break;
             case 2:
               atualizar_numero(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              delay(2000);
+              limpaTela();
               break;
             case 3:
-              atualizar_cargo(funcionario_busc); 
+              atualizar_cargo_funcionario(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              delay(2000);
+              limpaTela();
               break;
             case 4:
               atualizar_endereco(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              delay(2000);
+              limpaTela();
               break;
             case 5:
               atualizar_salario(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              delay(2000);
+              limpaTela();
               break;
             case 6:
               atualizar_expediente(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
+              delay(2000);
+              limpaTela();
               break;
             case 7:
               funcionario_busc->stats = 0;
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");
+              delay(2000);
+              limpaTela();
               break;
             case 8:
               if(excluir_funcionario(*funcionario_busc->cpf)) printf("Funcionario excluído!!\n");
+              delay(2000);
+              limpaTela();
               break;
             default:
               printf("Digite um número valido\n");
+              delay(2000);
+              limpaTela();
               break;
           }
         }
+          break;
         break;
-      }
-      break;
-    case 4:
-      listar_funcionario();
-      break;
-    case 5:
-      reativar_funcionario();
-      break;
-    default:
-      printf("Deve digitar um número");
-      break;
+      case 3:
+        listar_funcionario();
+        break;
+      case 4:
+        reativar_funcionario();
+        delay(2000);
+        limpaTela();
+        break;
+      default:
+        printf("Deve digitar um número valido");
+        delay(2000);
+        limpaTela();
+        break;
     }
   } while (option != 0);
 }
 
-void cadastro_funcionario(Funcionario *funcionario) {
+int cadastro_funcionario(Funcionario *funcionario) {
   printf("\n=========================================\n");
   printf("======== <Cadastrar Funcionario> ========\n");
   printf("=========================================\n");
@@ -132,12 +144,22 @@ void cadastro_funcionario(Funcionario *funcionario) {
   }
   getchar();
 
-  printf("Digite o número do funcionario: ");
-  fgets(funcionario->numero, 11, stdin);
-  funcionario->numero[strcspn(funcionario->numero, "\n")] = '\0';
-  getchar();
+  bool numero_valido = false;
+  while (!numero_valido) {
+    printf("Digite o número do funcionario: ");
+    fgets(funcionario->numero, 11, stdin);
+    funcionario->numero[strcspn(funcionario->numero, "\n")] = '\0';
+    printf("%s\n", funcionario->numero);
 
-  printf("Digite o cargo do funcionario: ");
+    numero_valido = verificar_telefone(funcionario->numero);
+    if (!numero_valido) {
+      printf("número invalido! Digite novamente.\n");
+    }
+  }
+  getchar();
+  
+  listar_cargos();
+  printf("Digite um dos cargos acima: ");
   fgets(funcionario->cargo, 50, stdin);
   funcionario->cargo[strcspn(funcionario->cargo, "\n")] = '\0';
 
@@ -146,42 +168,31 @@ void cadastro_funcionario(Funcionario *funcionario) {
   funcionario->endereco[strcspn(funcionario->endereco, "\n")] = '\0';
 
   printf("Digite a salario do funcionario (reais): ");
-  scanf("%e", &funcionario->salario);
+  scanf("%6f", &funcionario->salario);
   getchar();
 
   printf("Digite o expediente do funcionario: ");
   fgets(funcionario->expediente, 50, stdin);
   funcionario->expediente[strcspn(funcionario->expediente, "\n")] = '\0';
 
-  bool senha_segura = false;
-  while (!senha_segura) {
-    printf("Digite a senha do funcionario (Minimo 8 digitos, Maximo 20 digitos, ao menos uma letra e um número): ");
-    fgets(funcionario->password, 21, stdin);
-    funcionario->password[strcspn(funcionario->password, "\n")] = '\0';
-    printf("%s\n", funcionario->password);
-
-    senha_segura = verificar_senha(funcionario->cpf);
-    if (!cpf_valido) {
-      printf("senha invalida! Digite novamente.\n");
-    }
-  }
-  getchar();
-
   funcionario->stats = 1;
+
+  gravar_funcionario(funcionario);
 
   printf("=====================================\n");
 };
 
-int gravar_funcionario(Funcionario *funcionario_grav){
+int gravar_funcionario(Funcionario *funcionario){
     FILE *fp;
     fp = fopen(ARQUIVO_FUNCIONARIOS, "ab");
     if (fp == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
+        delay(2000);
         return 0;
     }
     //Insere o aluno no final do arquivo
-    fwrite(funcionario_grav,sizeof(Funcionario),1,fp);
+    fwrite(funcionario,sizeof(Funcionario),1,fp);
     fclose(fp);
     return 1;
 };
@@ -229,7 +240,7 @@ int listar_funcionario(void){
         printf("Erro no acesso do arquivo\n!");
         return 0;
     }
-    printf("-------------------------- Lista de Alunos --------------------------------\n");
+    printf("-------------------------- Lista de Funcionarios --------------------------------\n");
     while (fread(funcionario, sizeof(Funcionario), 1, fp))
     {
       if (funcionario->stats == true){
@@ -237,34 +248,34 @@ int listar_funcionario(void){
       }
     }
     printf("---------------------------------------------------------------------------\n");
-    
+    delay(2000);
+    limpaTela();
 };
 
 void exibir_funcionario(Funcionario *funcionario){
-    printf("Nome: %s, cpf: %s, numero: %s, cargo: %s, endereço: %s, salário: %e, expediente: %s\n",
+    printf("Nome: %s, cpf: %s, numero: %s, cargo: %s, endereço: %s, salário: %.2f, expediente: %s\n",
           funcionario->nome, funcionario->cpf, funcionario->numero,
           funcionario->cargo, funcionario->endereco, funcionario->salario, funcionario->expediente);
-}
+};
 
 Funcionario* buscar_funcionario(char* cpf){
-    FILE *fp;
-    Funcionario *funcionario = (Funcionario *)malloc(sizeof(Funcionario));
-    fp = fopen(ARQUIVO_FUNCIONARIOS, "rb");
-    if (fp == NULL)
-    {
-        printf("Erro no acesso do arquivo\n!");
-        return NULL;
-    }
-    while (fread(funcionario, sizeof(Funcionario), 1, fp))
-    {
-        if(strcmp(funcionario->cpf, cpf) == 0){
-            fclose(fp);
-            return funcionario;
-        }
-    }
-    fclose(fp);
-    return NULL;
-};
+  FILE* fp;
+	Funcionario* funcionario;
+
+	funcionario = (Funcionario*) malloc(sizeof(Funcionario));
+	fp = fopen("funcionarios.dat", "rb");
+	if (fp == NULL) {
+		printf("Falha em abrir o arquivo\n");
+	}
+	while(fread(funcionario, sizeof(Funcionario), 1, fp)) {
+		if ((strcmp(funcionario->cpf, cpf) == 0) && (funcionario->stats == true)) {
+			fclose(fp);
+			return funcionario;
+		}
+	}
+	fclose(fp);
+	return NULL;
+}
 
 void reativar_funcionario(void){
   char cpf[12] = "0";
@@ -305,7 +316,7 @@ void atualizar_numero(Funcionario *funcionario_busc){
   funcionario_busc->numero[strcspn(funcionario_busc->numero, "\n")] = '\0';
 };
 
-void atualizar_cargo(Funcionario *funcionario_busc){
+void atualizar_cargo_funcionario(Funcionario *funcionario_busc){
   printf("Informe o nome do produto: ");
   fgets(funcionario_busc->cargo, 50, stdin);
   funcionario_busc->cargo[strcspn(funcionario_busc->cargo, "\n")] = '\0';
@@ -319,7 +330,7 @@ void atualizar_endereco(Funcionario *funcionario_busc){
 
 void atualizar_salario(Funcionario *funcionario_busc){
   printf("Digite a quantidade do produto para avisar nescessidade de reposição (Opcional): ");
-  scanf("%e", &funcionario_busc->salario);
+  scanf("%6f", &funcionario_busc->salario);
   getchar();
 };
 
@@ -350,38 +361,4 @@ int atualizar_funcionario(Funcionario *funcionario_busc){
 	}
 	fclose(fp);
 	free(produto_lido);
-};
-
-bool comparar_senha(Funcionario *funcionario_checar){
-  char password[21];
-  printf("Digite a senha do funcionario, %s:", funcionario_checar->nome);
-  fgets(password, 21, stdin);
-  password[strcspn(password, "\n")] = '\0';
-  if((strcmp(funcionario_checar->password, password) || verificar_senha_de_emergencia(password))){
-    return true;
-  }
-  return false;
-};
-
-bool verificar_senha_de_emergencia(char *password){
-  if (strcmp(senha_mestre, password)) {
-    return true;
-  }
-  FILE *fp;
-    Funcionario *funcionario = (Funcionario *)malloc(sizeof(Funcionario));
-    fp = fopen(ARQUIVO_FUNCIONARIOS, "rb");
-    if (fp == NULL)
-    {
-        printf("Erro no acesso do arquivo\n!");
-        return NULL;
-    }
-    while (fread(funcionario, sizeof(Funcionario), 1, fp))
-    {
-        if(strcmp(funcionario->cargo, "Gerente") == 0){
-            fclose(fp);
-            return true;
-        }
-    }
-    fclose(fp);
-    return NULL;
 };

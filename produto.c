@@ -1,4 +1,7 @@
 #include "produto.h"
+#include "util.h"
+#include "fornecedor.h"
+#include "tipo_produto.h"
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -28,66 +31,81 @@ void menu_produto(){
             case 0:
                 break;
             case 1:
-                Produto *produtoy = (Produto *) malloc(sizeof(Produto));
-                cadastro_produto(produtoy);
-                gravar_produto(produtoy);
+                Produto *produto = (Produto *) malloc(sizeof(Produto));
+                cadastro_produto(produto);
                 break;
             case 2:
               char codigo_produto[13] = "0";
               printf("Informe a codigo UPC do produto: ");
-              scanf("%s", codigo_produto);
+              fgets(codigo_produto, 13, stdin);
               getchar();
               Produto *produtox = buscar_produto(codigo_produto);
-              if ((produtox != NULL) && (*produtox->codigo_produto == 1)){
+              if ((produtox != NULL) && (produtox->stats == 1)){
                 exibir_produto(produtox);
+                delay(2);
                 int editar = menu_buscar_produto();
-                switch (editar)
-                {
-                case 1:
-                  getchar();
-                  atualizar_nome_produto(produtox);
-                  if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");
-                  break;
-                case 2:
-                  atualizar_quantidade(produtox); 
-                  if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
-                  break;
-                case 3:
-                  atualizar_tipo_produto(produtox); 
-                  if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
-                  break;
-                case 4:
-                  atualizar_local_produto(produtox); 
-                  if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
-                  break;
-                case 5:
-                  atualizar_fornecedor(produtox); 
-                  if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
-                  break;
-                case 6:
-                  atualizar_quantidade_reposicao(produtox); 
-                  if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
-                  break;
-                case 7:
-                  atualizar_anotacoes(produtox); 
-                  if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
-                  break;
-                case 8:
-                  produtox->stats = 0;
-                  if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");
-                  break;
-                case 9:
-                  if(excluir_produto(*produtox->codigo_produto)) printf("Produto excluído!!\n");
-                  break;
-                default:
-                  break;
-              }
-              break;
+                switch (editar){
+                  case 1:
+                    getchar();
+                    atualizar_nome_produto(produtox);
+                    if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");
+                    break;
+                  case 2:
+                    atualizar_quantidade(produtox); 
+                    if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
+                    break;
+                  case 3:
+                    atualizar_tipo_produto(produtox); 
+                    if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
+                    break;
+                  case 4:
+                    atualizar_local_produto(produtox); 
+                    if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
+                    break;
+                  case 5:
+                    atualizar_fornecedor_produto(produtox); 
+                    if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
+                    break;
+                  case 6:
+                    atualizar_quantidade_reposicao(produtox); 
+                    if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
+                    break;
+                  case 7:
+                    atualizar_anotacoes(produtox); 
+                    if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");;
+                    break;
+                  case 8:
+                    produtox->stats = 0;
+                    if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");
+                    break;
+                  case 9:
+                    if(excluir_produto(*produtox->codigo_produto)) printf("Produto excluído!!\n");
+                    break;
+                  default:
+                    break;
+                }
+                break;
               }
               break;
             case 3:
-              listar_produto();
-              break;
+              int escolha = menu_filtro_produto();
+              switch (escolha)
+              {
+              case 0:
+                listar_produto(0);
+                delay(2000);
+                limpaTela();
+                break;
+
+              case 1:
+                listar_produto(1);
+                delay(2000);
+                limpaTela();
+                break;
+              
+              default:
+                break;
+              }
 
             case 4:
               reativar_produto();
@@ -101,7 +119,7 @@ void menu_produto(){
     } while (option != 0);
 }
 
-void cadastro_produto(Produto *produto) {
+int cadastro_produto(Produto *produto) {
     printf("\n=====================================\n");
     printf("======== <Cadastrar Produto> ========\n");
     printf("=====================================\n");
@@ -126,9 +144,10 @@ void cadastro_produto(Produto *produto) {
     printf("Digite a quantidade do produto: ");
     scanf("%d", &produto->quantidade);
     getchar();
-
-    printf("Digite o tipo do produto: ");
-    fgets(produto->tipo_produto, 20, stdin);
+    
+    listar_tipo_produto();
+    printf("Digite um dos cargos abaixo: ");
+    fgets(produto->tipo_produto, 45, stdin);
     produto->tipo_produto[strcspn(produto->tipo_produto, "\n")] = '\0';
 
     printf("Digite o local do produto: ");
@@ -136,7 +155,8 @@ void cadastro_produto(Produto *produto) {
     produto->local_produto[strcspn(produto->local_produto, "\n")] = '\0';
     getchar();
 
-    printf("Digite o fornecedor do produto (opcional): ");
+    listar_fornecedores();
+    printf("Digite um dos fornecedores acima: ");
     fgets(produto->fornecedor, 50, stdin);
     produto->fornecedor[strcspn(produto->fornecedor, "\n")] = '\0';
 
@@ -145,12 +165,15 @@ void cadastro_produto(Produto *produto) {
     getchar();
 
     printf("Digite uma nota de armazenamento para o produto (opcional): ");
-    fgets(produto->anotacao_armazenamento, 50, stdin);
+    fgets(produto->anotacao_armazenamento, 100, stdin);
     produto->anotacao_armazenamento[strcspn(produto->anotacao_armazenamento, "\n")] = '\0';
 
     produto->stats = 1;
 
     printf("=====================================\n");
+
+    gravar_produto(produto);
+    return 0;
 };
 
 int menu_buscar_produto(void){
@@ -168,6 +191,19 @@ int menu_buscar_produto(void){
   printf("8 - Desativar produto (Exclusão temporaria):\n");
   printf("9 - Exclusão completa do produto:\n");
   printf("0 - Retornar:\n");
+  scanf("%d", &option);
+  getchar;
+  return option;
+};
+
+int menu_filtro_produto(void){
+  int option = 99;
+  printf("\n=======================================================\n");
+  printf("============ <Escolha como deseja filtrar> ============\n");
+  printf("=======================================================\n\n");
+  printf("0 - Sem filtro:\n");
+  printf("1 - Filtrar por tipo:\n");
+  printf("2 - Filtrar por fornecedor:\n");
   scanf("%d", &option);
   getchar;
   return option;
@@ -219,21 +255,18 @@ bool validar_upc(const char *upc) {
   return true;
 };
 
-int gravar_produto(Produto *produtox){
-    FILE *fp;
-    fp = fopen(ARQUIVO_PRODUTOS, "ab");
-    if (fp == NULL)
-    {
-        printf("Erro na criacao do arquivo\n!");
-        return 0;
-    }
-    //Insere o aluno no final do arquivo
-    fwrite(produtox,sizeof(Produto),1,fp);
-    fclose(fp);
-    return 1;
-};
+int gravar_produto(Produto *produto){
+    FILE* fp;
 
-int listar_produto(void){
+	fp = fopen("produto.dat", "ab");
+	if (fp == NULL) {
+		printf("Erro na criação do arquivo");
+	}
+	fwrite(produto, sizeof(Produto), 1, fp);
+	fclose(fp);
+}
+
+int listar_produto(int filtro){
     FILE *fp;
     Produto *produtox = (Produto*) malloc(sizeof(Produto));
     
@@ -243,15 +276,52 @@ int listar_produto(void){
         printf("Erro no acesso do arquivo\n!");
         return 0;
     }
-    printf("-------------------------- Lista de Alunos --------------------------------\n");
-    while (fread(produtox, sizeof(Produto), 1, fp))
-    {
-      if (produtox->stats == true){
-       exibir_produto(produtox);
+    printf("------------------------- Lista de Produtos -------------------------------\n");
+    while (fread(produtox, sizeof(Produto), 1, fp)){
+      switch (filtro)
+      {
+      case 0:
+        if (produtox->stats == true){
+        exibir_produto(produtox);
+        }
+        break;
+      
+      case 1:
+        char tipo_produto[50];
+        printf("Qual tipo do produto dentre os abaixo?\n");
+        listar_tipo_produto;
+        printf("Digite um dos cargos abaixo: ");
+        fgets(tipo_produto, 50, stdin);
+        tipo_produto[strcspn(tipo_produto, "\n")] = '\0';
+        if ((produtox->stats == true) && (strcmp(produtox->tipo_produto, tipo_produto) == 0)){
+        exibir_produto(produtox);
+        }
+        break;
+
+      case 2:
+        char fornecedor[50];
+        printf("Qual fornecedor dentre os abaixo?\n");
+        listar_tipo_produto;
+        printf("Digite um dos cargos abaixo: ");
+        fgets(fornecedor, 50, stdin);
+        fornecedor[strcspn(fornecedor, "\n")] = '\0';
+        if ((produtox->stats == true) && (strcmp(produtox->fornecedor, fornecedor) == 0)){
+        exibir_produto(produtox);
+        }
+        break;
+      
+      case 3:
+        if ((produtox->stats == true) && (produtox->quantidade_reposicao >= produtox->quantidade)){
+        exibir_produto(produtox);
+        }
+        break;
+      
+      default:
+        break;
       }
     }
     printf("---------------------------------------------------------------------------\n");
-    
+    delay(2000);
 };
 
 void atualizar_nome_produto(Produto *produtox){
@@ -266,22 +336,22 @@ void atualizar_quantidade(Produto *produto){
   getchar();
 };
 
-void atualizar_tipo_produto(Produto *produtox){
-  printf("Digite o tipo do produto: ");
-  fgets(produtox->tipo_produto, 20, stdin);
-  produtox->tipo_produto[strcspn(produtox->tipo_produto, "\n")] = '\0';
-};
-
 void atualizar_local_produto(Produto *produtox){
   printf("Digite o local do produto: ");
   fgets(produtox->local_produto, 5, stdin);
   produtox->local_produto[strcspn(produtox->local_produto, "\n")] = '\0';
 };
 
-void atualizar_fornecedor(Produto *produtox){
+void atualizar_fornecedor_produto(Produto *produtox){
   printf("Digite o fornecedor do produto (opcional): ");
   fgets(produtox->fornecedor, 50, stdin);
   produtox->fornecedor[strcspn(produtox->fornecedor, "\n")] = '\0';
+};
+
+void atualizar_tipo_produto(Produto *produtox){
+  printf("Digite o tipo do produto (opcional): ");
+  fgets(produtox->tipo_produto, 45, stdin);
+  produtox->tipo_produto[strcspn(produtox->tipo_produto	, "\n")] = '\0';
 };
 
 void atualizar_quantidade_reposicao(Produto *produtox){
@@ -353,6 +423,8 @@ void exibir_produto(Produto *produto){
           produto->nome_produto, produto->codigo_produto, produto->quantidade,
           produto->tipo_produto, produto->local_produto, produto->fornecedor, produto->quantidade_reposicao,
           produto->anotacao_armazenamento);
+    delay(2000);
+    limpaTela();
 }
 
 int excluir_produto(char codigo_produto){

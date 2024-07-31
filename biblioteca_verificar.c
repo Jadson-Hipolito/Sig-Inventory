@@ -91,8 +91,9 @@ bool verificar_senha(const char *password){
   printf("%s\n", password);
   int tamanho = strlen(password);
 
-  if(tamanho != 8) {
-  return false;
+  if(tamanho < 8) {
+   printf("tamanho invalido");
+   return false;
   }
 
   for(int i = 0; i < tamanho && letra < 1; i++) {
@@ -101,6 +102,7 @@ bool verificar_senha(const char *password){
     }
   }
   if (letra < 1){
+    printf("falta letras");
     return false;
   }
 
@@ -110,6 +112,7 @@ bool verificar_senha(const char *password){
     }
   }
   if (num < 1){
+    printf("falta letras");
     return false;
   }
   return true;

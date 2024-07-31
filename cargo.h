@@ -3,16 +3,18 @@
 #include <stdbool.h>
 
 struct cargo {
-    char nome[45];
+    char nome[50];
     int stats;
 };
 typedef struct cargo Cargo;
 
 void menu_cargo(void);
-void cadastrar_cargo(Cargo *);
+void cadastro_cargo(Cargo *);
 int listar_cargos(void);
 int gravar_cargo(Cargo *);
 int excluir_cargo(char);
-Cargo* buscar_cargo(char [45]);
+Cargo* buscar_cargo(char *);
+int atualizar_cargo(Cargo *);
+int editar_nome_cargo(Cargo *);
 
 #endif

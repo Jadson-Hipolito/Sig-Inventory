@@ -1,5 +1,6 @@
 #include "produto.h"
 #include "tipo_produto.h"
+#include "util.h"
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -30,7 +31,6 @@ void menu_tipo_produto(void){
       case 1:
         Tipo *tipo_cad = (Tipo *) malloc(sizeof(Tipo));
         cadastro_tipo_produto(tipo_cad);
-        gravar_tipo_produto(tipo_cad);
         break;
       case 2:
         char nome[45];
@@ -42,8 +42,16 @@ void menu_tipo_produto(void){
         break;
       case 3:
         listar_tipo_produto();
+        delay(2000);
+        limpaTela();
         break;
       case 4:
+        listar_tipo_produto();
+        char nome_exluir[45];
+        printf("Digite o nome do tipo do produto: ");
+        fgets(nome_exluir, 45, stdin);
+        nome_exluir[strcspn(nome_exluir, "\n")] = '\0';
+        excluir_tipo_produto(* nome_exluir);
         break;
 
       default:
@@ -54,9 +62,8 @@ void menu_tipo_produto(void){
 }
 
 int listar_tipo_produto(void){
-  int i = 0;
-  FILE *fp;
-    Tipo *tip = (Tipo*) malloc(sizeof(Tipo));
+    FILE *fp;
+    Tipo *tipo = (Tipo*) malloc(sizeof(Tipo));
     
     fp = fopen(ARQUIVO_TIPOS, "rb");
     if (fp == NULL)
@@ -65,41 +72,43 @@ int listar_tipo_produto(void){
         return 0;
     }
     printf("-------------------------- Lista de Alunos --------------------------------\n");
-    while (fread(tip, sizeof(Tipo), 1, fp)) {
-      i++;
-      if (tip->stats == true){
-       printf("%d-Nome: %s\n",
-          i, tip->nome);
+    while (fread(tipo, sizeof(Tipo), 1, fp))
+    {
+      if (tipo->stats == true){
+       exibir_tipo(tipo);
       }
     }
     printf("---------------------------------------------------------------------------\n");
-    
 };
 
-void cadastro_tipo_produto(Tipo *tipo) {
+void cadastro_tipo_produto(Tipo *tipo_cad) {
     printf("\n=====================================\n");
     printf("==== <Cadastrar Tipo de Produto> ====\n");
     printf("=====================================\n");
 
     printf("Digite o nome do tipo do produto: ");
-    fgets(tipo->nome, 45, stdin);
-    tipo->nome[strcspn(tipo->nome, "\n")] = '\0';
+    fgets(tipo_cad->nome, 45, stdin);
+    tipo_cad->nome[strcspn(tipo_cad->nome, "\n")] = '\0';
 
-    tipo->stats = 1;
+    tipo_cad->stats = 1;
+    gravar_tipo_produto(tipo_cad);
 };
 
-int gravar_tipo_produto(Tipo *tipo){
+int gravar_tipo_produto(Tipo *tipo_cad){
+    FILE *fp;
+    fp = fopen(ARQUIVO_TIPOS, "ab");
+    if (fp == NULL){
+        printf("Erro na criação do arquivo\n!");
+        return 0;
+    }
+    fwrite(tipo_cad,sizeof(Tipo),1,fp);
+    fclose(fp);
+    return 1;
+};
 
-  FILE *fp;
-  fp = fopen(ARQUIVO_TIPOS, "at");
-  if (fp == NULL) {
-    printf("Erro na criacao do arquivo!\n");
-    return 0;
-  }
-  fprintf(fp,
-          "Nome: %s, status: %d\n",
-          tipo->nome, tipo->stats);
-  fclose(fp);
+void exibir_tipo(Tipo *tipo){
+    printf("Nome: %s\n",
+          tipo->nome);
 };
 
 int excluir_tipo_produto(char nome){

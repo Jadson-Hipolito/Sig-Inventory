@@ -6,7 +6,7 @@ struct produto {
     char nome_produto[50];
     char codigo_produto[13];
     int quantidade;
-    char tipo_produto[20];
+    char tipo_produto[45];
     char local_produto[5];
     char fornecedor[50];
     int quantidade_reposicao;
@@ -16,22 +16,23 @@ struct produto {
 typedef struct produto Produto;
 
 void menu_produto(void);
-void cadastro_produto(Produto *);
+int cadastro_produto(Produto *);
 int gravar_produto(Produto *);
 int excluir_produto(char);
 int menu_buscar_produto(void);
-int listar_produto(void);
+int listar_produto(int);
 bool validar_upc(const char *upc);
 int atualiza_produto(Produto *);
 void atualizar_nome_produto(Produto *);
 void atualizar_quantidade(Produto *);
 void atualizar_tipo_produto(Produto *);
 void atualizar_local_produto(Produto *);
-void atualizar_fornecedor(Produto *);
+void atualizar_fornecedor_produto(Produto *);
 void atualizar_quantidade_reposicao(Produto *);
 void atualizar_anotacoes(Produto *);
 Produto* buscar_produto(char *);
 void exibir_produto(Produto *);
 void reativar_produto(void);
+int menu_filtro_produto(void);
 
 #endif
