@@ -18,9 +18,11 @@ typedef struct produto Produto;
 void menu_produto(void);
 int cadastro_produto(Produto *);
 int gravar_produto(Produto *);
-int excluir_produto(char);
+int excluir_produto(char codigo_produto);
 int menu_buscar_produto(void);
-int listar_produto(int);
+int listar_produto();
+int listar_produto_tipo(char *);
+int listar_produto_fornecedor(char *);
 bool validar_upc(const char *upc);
 int atualiza_produto(Produto *);
 void atualizar_nome_produto(Produto *);
@@ -32,7 +34,7 @@ void atualizar_quantidade_reposicao(Produto *);
 void atualizar_anotacoes(Produto *);
 Produto* buscar_produto(char *);
 void exibir_produto(Produto *);
-void reativar_produto(void);
+int reativar_produto(void);
 int menu_filtro_produto(void);
 
 #endif

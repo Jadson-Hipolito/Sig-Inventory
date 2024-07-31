@@ -92,20 +92,32 @@ void menu_produto(){
               switch (escolha)
               {
               case 0:
-                listar_produto(0);
-                delay(2000);
-                limpaTela();
+                listar_produto();
+                getchar();
                 break;
 
               case 1:
-                listar_produto(1);
-                delay(2000);
-                limpaTela();
+                char tipo_produto[45];
+                printf("Digite um dos tipos de produto abaixo: ");
+                listar_tipo_produto();
+                fgets(tipo_produto, 45, stdin);
+                tipo_produto[strcspn(tipo_produto, "\n")] = '\0';
+                listar_produto_tipo(tipo_produto);
+                break;
+
+              case 2:
+                char fornecedor[50];
+                printf("Digite um dos fornecedores abaixo: ");
+                listar_fornecedores();
+                fgets(fornecedor, 45, stdin);
+                fornecedor[strcspn(fornecedor, "\n")] = '\0';
+                listar_produto_fornecedor(fornecedor);
                 break;
               
               default:
                 break;
               }
+              break;
 
             case 4:
               reativar_produto();
@@ -266,62 +278,64 @@ int gravar_produto(Produto *produto){
 	fclose(fp);
 }
 
-int listar_produto(int filtro){
-    FILE *fp;
-    Produto *produtox = (Produto*) malloc(sizeof(Produto));
+int listar_produto(){
+  FILE *fp;
+  Produto *produto = (Produto*) malloc(sizeof(Produto));
     
-    fp = fopen(ARQUIVO_PRODUTOS, "rb");
-    if (fp == NULL)
-    {
-        printf("Erro no acesso do arquivo\n!");
-        return 0;
+  fp = fopen(ARQUIVO_PRODUTOS, "rb");
+  if (fp == NULL){
+    printf("Erro no acesso do arquivo\n!");
+    return 0;
+  }
+  printf("-------------------------- Lista de Funcionarios --------------------------------\n");
+  while (fread(produto, sizeof(Produto), 1, fp)){
+    if (produto->stats == true){
+      exibir_produto(produto);
     }
-    printf("------------------------- Lista de Produtos -------------------------------\n");
-    while (fread(produtox, sizeof(Produto), 1, fp)){
-      switch (filtro)
-      {
-      case 0:
-        if (produtox->stats == true){
-        exibir_produto(produtox);
-        }
-        break;
-      
-      case 1:
-        char tipo_produto[50];
-        printf("Qual tipo do produto dentre os abaixo?\n");
-        listar_tipo_produto;
-        printf("Digite um dos cargos abaixo: ");
-        fgets(tipo_produto, 50, stdin);
-        tipo_produto[strcspn(tipo_produto, "\n")] = '\0';
-        if ((produtox->stats == true) && (strcmp(produtox->tipo_produto, tipo_produto) == 0)){
-        exibir_produto(produtox);
-        }
-        break;
+  }
+  printf("---------------------------------------------------------------------------\n");
+  getchar();
+  limpaTela();
+};
 
-      case 2:
-        char fornecedor[50];
-        printf("Qual fornecedor dentre os abaixo?\n");
-        listar_tipo_produto;
-        printf("Digite um dos cargos abaixo: ");
-        fgets(fornecedor, 50, stdin);
-        fornecedor[strcspn(fornecedor, "\n")] = '\0';
-        if ((produtox->stats == true) && (strcmp(produtox->fornecedor, fornecedor) == 0)){
-        exibir_produto(produtox);
-        }
-        break;
-      
-      case 3:
-        if ((produtox->stats == true) && (produtox->quantidade_reposicao >= produtox->quantidade)){
-        exibir_produto(produtox);
-        }
-        break;
-      
-      default:
-        break;
-      }
+int listar_produto_tipo(char *tipo_produto){
+  FILE *fp;
+  Produto *produto = (Produto*) malloc(sizeof(Produto));
+    
+  fp = fopen(ARQUIVO_PRODUTOS, "rb");
+  if (fp == NULL){
+    printf("Erro no acesso do arquivo\n!");
+    return 0;
+  }
+  printf("-------------------------- Lista de Funcionarios --------------------------------\n");
+  while (fread(produto, sizeof(Produto), 1, fp)){
+    if ((produto->stats == true) && (strcmp(produto->tipo_produto, tipo_produto) == 0)){
+      exibir_produto(produto);
     }
-    printf("---------------------------------------------------------------------------\n");
-    delay(2000);
+  }
+  printf("---------------------------------------------------------------------------\n");
+  getchar();
+  limpaTela();
+};
+
+int listar_produto_fornecedor(char *fornecedor){
+  FILE *fp;
+  Produto *produto = (Produto*) malloc(sizeof(Produto));
+    
+  fp = fopen(ARQUIVO_PRODUTOS, "rb");
+  if (fp == NULL){
+    printf("Erro no acesso do arquivo\n!");
+    return 0;
+  }
+  printf("-------------------------- Lista de Funcionarios --------------------------------\n");
+  while (fread(produto, sizeof(Produto), 1, fp)){
+    if ((produto->stats == true) && (strcmp(produto->fornecedor, fornecedor) == 0)){
+      exibir_produto(produto);
+    }
+  }
+  printf("---------------------------------------------------------------------------\n");
+  getchar();
+  limpaTela();
 };
 
 void atualizar_nome_produto(Produto *produtox){
@@ -389,12 +403,30 @@ int atualiza_produto(Produto *produtox){
 	free(produto_lido);
 };
 
-void reativar_produto(void){
+int reativar_produto(void){
   char codigo_produto[13] = "0";
   printf("Informe a codigo UPC do produto: ");
   scanf("%s", codigo_produto);
   getchar();
-  Produto *produtox = buscar_produto(codigo_produto);
+  FILE *fp;
+    Produto *produtox = (Produto *)malloc(sizeof(Produto));
+    fp = fopen(ARQUIVO_PRODUTOS, "rb");
+    if (fp == NULL)
+    {
+        printf("Erro no acesso do arquivo\n!");
+        return 0;
+    }
+    while (fread(produtox, sizeof(Produto), 1, fp))
+    {
+        if(strcmp(produtox->codigo_produto, codigo_produto) == 0){
+            fclose(fp);
+            produtox->stats = 1;
+            atualiza_produto(produtox);
+            return 0;
+        }
+    }
+    fclose(fp);
+    return 0;
 
 }
 
@@ -423,8 +455,6 @@ void exibir_produto(Produto *produto){
           produto->nome_produto, produto->codigo_produto, produto->quantidade,
           produto->tipo_produto, produto->local_produto, produto->fornecedor, produto->quantidade_reposicao,
           produto->anotacao_armazenamento);
-    delay(2000);
-    limpaTela();
 }
 
 int excluir_produto(char codigo_produto){

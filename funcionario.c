@@ -214,12 +214,9 @@ int excluir_funcionario(char cpf){
         printf("Erro na criacao do arquivo\n!");
         return 0;
     }
-    //Lendo o arquivo atual
     while (fread(auxiliarLeitura, sizeof(Funcionario), 1, fleitura))
     {
-        //Caso a matricula seja diferente
         if(*auxiliarLeitura->cpf != cpf){
-            //Escreva no arquivo novo
             fwrite(auxiliarLeitura,sizeof(Funcionario), 1, fescrita);            
         }
     }  

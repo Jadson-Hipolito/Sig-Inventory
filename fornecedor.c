@@ -118,13 +118,13 @@ int excluir_fornecedor(char nome){
     fleitura = fopen(ARQUIVO_FORNECEDORES, "rb");
     if (fleitura == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
     fescrita = fopen(ARQUIVO_FORNECEDORES_TEMPORARIOS, "wb");
     if (fescrita == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
     while (fread(auxiliarLeitura, sizeof(Fornecedor), 1, fleitura))

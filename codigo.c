@@ -6,6 +6,7 @@
 #include "entrada_saida.h"
 #include "fornecedor.h"
 #include "produto.h"
+#include "util.h"
 #include "biblioteca_verificar.h"
 #include "tipo_produto.h"
 #include "cargo.h"
@@ -22,6 +23,7 @@ int main(){
   printf("4 - Tipo produto\n");
   printf("5 - Cargos\n");
   printf("6 - Fornecedores\n");
+  printf("7 - Creditos\n");
   printf("0 - Finalizar Programa\n");
   printf("=====================================\n");
   printf("Escolha uma opção: ");
@@ -46,8 +48,12 @@ int main(){
    case 6:
     menu_fornecedor();
     break;
+   case 7:
+    printf("Feito por Jadson Hipólito de Almeida\n Usando como base funções de Prof. Flavius Gorgonio e Prof. Arthur Souza.");
+    delay(2000);
    default:
     printf("Deve digitar um número");
+    delay(2000);
     break;
    }
  } while (menu != 0);

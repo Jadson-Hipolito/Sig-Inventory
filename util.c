@@ -1,12 +1,5 @@
-
-///////////////////////////////////////////////////////////////////////////////
-///								Módulo Utilitário
-///////////////////////////////////////////////////////////////////////////////
-
-#include <time.h>
 #include <stdlib.h>
-#include <string.h>
-
+#include <time.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Faz uma pausa por n segundos, com n sendo passado como parâmetro
@@ -24,7 +17,5 @@ void delay(int segundos) {
 /// Limpa a tela; funciona em Linux / MacOS / Windows
 ///
 void limpaTela(void) {
-  if (system("clear") || system("cls")) {
-    // limpa a tela, Linux, Mac e Windows
-  }
-}
+  system("clear||cls");
+  };
