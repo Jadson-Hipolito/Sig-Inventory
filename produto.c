@@ -33,6 +33,7 @@ void menu_produto(){
             case 1:
                 Produto *produto = (Produto *) malloc(sizeof(Produto));
                 cadastro_produto(produto);
+                free(produto);
                 break;
             case 2:
               char codigo_produto[13] = "0";
@@ -42,7 +43,7 @@ void menu_produto(){
               Produto *produtox = buscar_produto(codigo_produto);
               if ((produtox != NULL) && (produtox->stats == 1)){
                 exibir_produto(produtox);
-                delay(2);
+                delay(1000);
                 int editar = menu_buscar_produto();
                 switch (editar){
                   case 1:
@@ -84,6 +85,7 @@ void menu_produto(){
                   default:
                     break;
                 }
+                free(produtox);
                 break;
               }
               break;
@@ -98,19 +100,23 @@ void menu_produto(){
 
               case 1:
                 char tipo_produto[45];
-                printf("Digite um dos tipos de produto abaixo: ");
+                printf("Digite um dos tipos de produto abaixo.\n");
                 listar_tipo_produto();
+                printf("Tipo: ");
                 fgets(tipo_produto, 45, stdin);
                 tipo_produto[strcspn(tipo_produto, "\n")] = '\0';
+                limpaTela();
                 listar_produto_tipo(tipo_produto);
                 break;
 
               case 2:
                 char fornecedor[50];
-                printf("Digite um dos fornecedores abaixo: ");
+                printf("Digite um dos fornecedores abaixo.\n");
                 listar_fornecedores();
+                printf("Fornecedor: ");
                 fgets(fornecedor, 45, stdin);
                 fornecedor[strcspn(fornecedor, "\n")] = '\0';
+                limpaTela();
                 listar_produto_fornecedor(fornecedor);
                 break;
               
@@ -124,9 +130,9 @@ void menu_produto(){
               break;
               
             default:
-
-                printf("Deve digitar um número");
-                break;
+              printf("Deve digitar um número valido\n");
+              limpaTela();
+              break;
         }
     } while (option != 0);
 }
@@ -218,6 +224,7 @@ int menu_filtro_produto(void){
   printf("2 - Filtrar por fornecedor:\n");
   scanf("%d", &option);
   getchar;
+  limpaTela();
   return option;
 };
 
@@ -315,6 +322,7 @@ int listar_produto_tipo(char *tipo_produto){
   }
   printf("---------------------------------------------------------------------------\n");
   getchar();
+  free(produto);
   limpaTela();
 };
 
@@ -335,6 +343,7 @@ int listar_produto_fornecedor(char *fornecedor){
   }
   printf("---------------------------------------------------------------------------\n");
   getchar();
+  free(produto);
   limpaTela();
 };
 
@@ -426,6 +435,7 @@ int reativar_produto(void){
         }
     }
     fclose(fp);
+    limpaTela();
     return 0;
 
 }
