@@ -52,60 +52,53 @@ void menu_funcionario(void) {
               atualizar_nome_funcionario(funcionario_busc);
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
               delay(2000);
-              limpaTela();
               break;
             case 2:
               atualizar_numero(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
               delay(2000);
-              limpaTela();
               break;
             case 3:
               atualizar_cargo_funcionario(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
               delay(2000);
-              limpaTela();
               break;
             case 4:
               atualizar_endereco(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
               delay(2000);
-              limpaTela();
               break;
             case 5:
               atualizar_salario(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
               delay(2000);
-              limpaTela();
               break;
             case 6:
               atualizar_expediente(funcionario_busc); 
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");;
               delay(2000);
-              limpaTela();
               break;
             case 7:
               funcionario_busc->stats = 0;
               if(atualizar_funcionario(funcionario_busc)) printf("Funcionario Atualizado!!\n");
               delay(2000);
-              limpaTela();
               break;
             case 8:
-              if(excluir_funcionario(*funcionario_busc->cpf)) printf("Funcionario excluído!!\n");
+              if(excluir_funcionario(funcionario_busc)) printf("Funcionario excluído!!\n");
               delay(2000);
-              limpaTela();
               break;
             default:
               printf("Digite um número valido\n");
               delay(2000);
-              limpaTela();
               break;
           }
+        limpaTela();      
         }
           break;
         break;
       case 3:
         listar_funcionario();
+        limpaTela();
         break;
       case 4:
         reativar_funcionario();
@@ -140,6 +133,11 @@ int cadastro_funcionario(Funcionario *funcionario) {
     cpf_valido = validar_cpf(funcionario->cpf);
     if (!cpf_valido) {
       printf("cpf invalido! Digite novamente.\n");
+    }
+
+    if (buscar_produto(funcionario->cpf) != NULL){
+      printf("Já existe um produto com esse codigo UPC registrado\n");
+      cpf_valido = false;
     }
   }
   getchar();
@@ -180,6 +178,7 @@ int cadastro_funcionario(Funcionario *funcionario) {
   gravar_funcionario(funcionario);
 
   printf("=====================================\n");
+  free(funcionario);
 };
 
 int gravar_funcionario(Funcionario *funcionario){
@@ -197,7 +196,7 @@ int gravar_funcionario(Funcionario *funcionario){
     return 1;
 };
 
-int excluir_funcionario(char cpf){
+int excluir_funcionario(Funcionario *funcionario){
     FILE *fleitura;
     FILE *fescrita;
     Funcionario *auxiliarLeitura = (Funcionario *) malloc(sizeof(Funcionario));
@@ -205,18 +204,21 @@ int excluir_funcionario(char cpf){
     fleitura = fopen(ARQUIVO_FUNCIONARIOS, "rb");
     if (fleitura == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
     fescrita = fopen(ARQUIVO_FUNCIONARIOS_TEMPORARIOS, "wb");
     if (fescrita == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
+    //Lendo o arquivo atual
     while (fread(auxiliarLeitura, sizeof(Funcionario), 1, fleitura))
     {
-        if(*auxiliarLeitura->cpf != cpf){
+        //Caso a matricula seja diferente
+        if(strcmp(auxiliarLeitura->cpf, funcionario->cpf) != 0){
+            //Escreva no arquivo novo
             fwrite(auxiliarLeitura,sizeof(Funcionario), 1, fescrita);            
         }
     }  
@@ -224,6 +226,7 @@ int excluir_funcionario(char cpf){
     fclose(fleitura);
     //Renomeia o arquivo novo com o nome do antigo
     rename(ARQUIVO_FUNCIONARIOS_TEMPORARIOS,ARQUIVO_FUNCIONARIOS);
+    free(auxiliarLeitura);
     return 1;
 };
 
@@ -245,8 +248,8 @@ int listar_funcionario(void){
       }
     }
     printf("---------------------------------------------------------------------------\n");
-    delay(2000);
-    limpaTela();
+    getchar();
+    free(funcionario);
 };
 
 void exibir_funcionario(Funcionario *funcionario){
@@ -279,7 +282,23 @@ void reativar_funcionario(void){
   printf("Informe a cpf do funcionario: ");
   scanf("%s", cpf);
   getchar();
-  Funcionario *funcionario = buscar_funcionario(cpf);
+  FILE* fp;
+	Funcionario* funcionario;
+
+	funcionario = (Funcionario*) malloc(sizeof(Funcionario));
+	fp = fopen("funcionarios.dat", "rb");
+	if (fp == NULL) {
+		printf("Falha em abrir o arquivo\n");
+	}
+	while(fread(funcionario, sizeof(Funcionario), 1, fp)) {
+		if ((strcmp(funcionario->cpf, cpf) == 0)) {
+			fclose(fp);
+			funcionario->stats = 1;
+      atualizar_funcionario(funcionario);
+		}
+	}
+	fclose(fp);
+	return NULL;
 };
 
 int menu_buscar_funcionario(void){
@@ -295,6 +314,7 @@ int menu_buscar_funcionario(void){
   printf("6 - Editar expediente do funcionario:\n");
   printf("7 - Desativar funcionario (Exclusão temporaria):\n");
   printf("8 - Exclusão completa do funcionario:\n");
+  printf("9 - Reativar funcionario:\n");
   printf("0 - Retornar:\n");
   scanf("%d", &option);
   getchar();

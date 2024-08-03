@@ -21,7 +21,7 @@ typedef struct funcionario Funcionario;
 void menu_funcionario(void);
 int cadastro_funcionario(Funcionario *);
 int gravar_funcionario(Funcionario *);
-int excluir_funcionario(char);
+int excluir_funcionario(Funcionario *);
 int listar_funcionario(void);
 Funcionario* buscar_funcionario(char[12]);
 void exibir_funcionario(Funcionario *);

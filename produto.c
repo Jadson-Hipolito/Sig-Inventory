@@ -80,7 +80,7 @@ void menu_produto(){
                     if(atualiza_produto(produtox)) printf("Produto Atualizado!!\n");
                     break;
                   case 9:
-                    if(excluir_produto(*produtox->codigo_produto)) printf("Produto excluído!!\n");
+                    if(excluir_produto(produtox)) printf("Produto excluído!!\n");
                     break;
                   default:
                     break;
@@ -123,6 +123,7 @@ void menu_produto(){
               default:
                 break;
               }
+              limpaTela();
               break;
 
             case 4:
@@ -152,21 +153,33 @@ int cadastro_produto(Produto *produto) {
       fgets(produto->codigo_produto, 13, stdin);
       produto->codigo_produto[strcspn(produto->codigo_produto, "\n")] = '\0';
       printf("%s\n", produto->codigo_produto);
-
       upc_valido = validar_upc(produto->codigo_produto);
+
       if (!upc_valido) {
         printf("UPC invalido! Digite novamente.\n");
       }
+
+      if (buscar_produto(produto->codigo_produto) != NULL){
+        printf("Já existe um produto com esse codigo UPC registrado\n");
+        upc_valido = false;
+      }
+
     }
 
     printf("Digite a quantidade do produto: ");
     scanf("%d", &produto->quantidade);
     getchar();
     
-    listar_tipo_produto();
-    printf("Digite um dos cargos abaixo: ");
-    fgets(produto->tipo_produto, 45, stdin);
-    produto->tipo_produto[strcspn(produto->tipo_produto, "\n")] = '\0';
+    do{
+      char* digito;
+      printf("Digite o digito de um dos tipos abaixo\n");
+      listar_tipo_produto();
+      printf("Tipo: ");
+      fgets(digito, 45, stdin);
+      digito[strcspn(digito, "\n")] = '\0';
+      Tipo *tip = selecionar_tipo_por_digito(* digito);
+      strcpy(produto->tipo_produto, tip->nome);
+    } while(produto->tipo_produto != NULL);
 
     printf("Digite o local do produto: ");
     fgets(produto->local_produto, 5, stdin);
@@ -302,7 +315,6 @@ int listar_produto(){
   }
   printf("---------------------------------------------------------------------------\n");
   getchar();
-  limpaTela();
 };
 
 int listar_produto_tipo(char *tipo_produto){
@@ -323,7 +335,6 @@ int listar_produto_tipo(char *tipo_produto){
   printf("---------------------------------------------------------------------------\n");
   getchar();
   free(produto);
-  limpaTela();
 };
 
 int listar_produto_fornecedor(char *fornecedor){
@@ -344,7 +355,6 @@ int listar_produto_fornecedor(char *fornecedor){
   printf("---------------------------------------------------------------------------\n");
   getchar();
   free(produto);
-  limpaTela();
 };
 
 void atualizar_nome_produto(Produto *produtox){
@@ -467,7 +477,7 @@ void exibir_produto(Produto *produto){
           produto->anotacao_armazenamento);
 }
 
-int excluir_produto(char codigo_produto){
+int excluir_produto(Produto *produto){
     FILE *fleitura;
     FILE *fescrita;
     Produto *auxiliarLeitura = (Produto *) malloc(sizeof(Produto));
@@ -475,27 +485,28 @@ int excluir_produto(char codigo_produto){
     fleitura = fopen(ARQUIVO_PRODUTOS, "rb");
     if (fleitura == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
     fescrita = fopen(ARQUIVO_PRODUTOS_TEMPORARIOS, "wb");
     if (fescrita == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
     //Lendo o arquivo atual
     while (fread(auxiliarLeitura, sizeof(Produto), 1, fleitura))
     {
         //Caso a matricula seja diferente
-        if(*auxiliarLeitura->codigo_produto != codigo_produto){
+        if(strcmp(auxiliarLeitura->codigo_produto, produto->codigo_produto) != 0){
             //Escreva no arquivo novo
-            fwrite(auxiliarLeitura,sizeof(Produto), 1, fescrita);            
+            fwrite(auxiliarLeitura,sizeof(Tipo), 1, fescrita);            
         }
     }  
     fclose(fescrita);
     fclose(fleitura);
     //Renomeia o arquivo novo com o nome do antigo
     rename(ARQUIVO_PRODUTOS_TEMPORARIOS,ARQUIVO_PRODUTOS);
+    free(auxiliarLeitura);
     return 1;
 };

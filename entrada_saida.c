@@ -10,6 +10,7 @@
 #include <time.h> 
 
 #define ARQUIVO_ENTRADA_E_SAIDA "entrada_e_saida.dat"
+#define ARQUIVO_ENTRADA_E_SAIDA_TEMPORARIO "entrada_e_saida.tmp"
 
 void menu_entrada_saida(void){
  int option = 5;
@@ -100,12 +101,12 @@ void entrada_e_saida(Entrada_Saida *entrada_saida, int sinal){
     struct tm *local = localtime(&now);
 
     // Extrair ano, mês, dia, hora, minuto e segundo
-    entrada_saida->ano = local->tm_year + 1900;
-    entrada_saida->mes = local->tm_mon + 1;
-    entrada_saida->dia = local->tm_mday;
-    entrada_saida->hora = local->tm_hour;
-    entrada_saida->minuto = local->tm_min;
-    entrada_saida->segundo = local->tm_sec;
+    entrada_saida->codigo = (local->tm_year + 1900)*10000000000;
+    entrada_saida->codigo += (local->tm_mon + 1)*100000000;
+    entrada_saida->codigo += (local->tm_mday)*1000000;
+    entrada_saida->codigo += (local->tm_hour)*10000;
+    entrada_saida->codigo += (local->tm_min)*100;
+    entrada_saida->codigo += (local->tm_sec);
 
     entrada_saida->stats = 1;
 
@@ -138,12 +139,40 @@ void editar_entrada_saida_produto(void){
   printf("Codigo do produto que ira editar a entrada:\n");
 }
 
-void remove_entrada_saida_produto(void){
-  printf("===================================================\n");
-  printf("=== <Remover Entrada ou Saida de Produto> ===\n");
-  printf("===================================================\n");
-  printf("Codigo do produto que ira remover entrada:\n");
-}
+int excluir_entrada_saida(Entrada_Saida *entrada_saida){
+    FILE *fleitura;
+    FILE *fescrita;
+    Entrada_Saida *auxiliarLeitura = (Entrada_Saida *) malloc(sizeof(Entrada_Saida));
+    int codigo;
+ 
+    fleitura = fopen(ARQUIVO_ENTRADA_E_SAIDA, "rb");
+    if (fleitura == NULL)
+    {
+        printf("Erro na criação do arquivo\n!");
+        return 0;
+    }
+    fescrita = fopen(ARQUIVO_ENTRADA_E_SAIDA_TEMPORARIO, "wb");
+    if (fescrita == NULL)
+    {
+        printf("Erro na criação do arquivo\n!");
+        return 0;
+    }
+    //Lendo o arquivo atual
+    while (fread(auxiliarLeitura, sizeof(Entrada_Saida), 1, fleitura))
+    {
+        //Caso a matricula seja diferente
+        if(auxiliarLeitura->codigo != entrada_saida->codigo){
+            //Escreva no arquivo novo
+            fwrite(auxiliarLeitura,sizeof(Entrada_Saida), 1, fescrita);            
+        }
+    }  
+    fclose(fescrita);
+    fclose(fleitura);
+    //Renomeia o arquivo novo com o nome do antigo
+    rename(ARQUIVO_ENTRADA_E_SAIDA_TEMPORARIO,ARQUIVO_ENTRADA_E_SAIDA);
+    free(auxiliarLeitura);
+    return 1;
+};
 
 void exibir_entrada_saida(Entrada_Saida *entrada_saida){
     char tipo[10];
@@ -153,8 +182,8 @@ void exibir_entrada_saida(Entrada_Saida *entrada_saida){
     if (entrada_saida < 0){
       strcpy(tipo,"entrada");
     }
-    printf("Na data de %d/%d/%d, as %d:%d:%d, o funcionario de cpf %s, registrou a %s de %d produtos de codigo UPC %s\n",
-          entrada_saida->dia, entrada_saida->mes, entrada_saida->ano, entrada_saida->hora, entrada_saida->minuto, entrada_saida->segundo, entrada_saida->cpf_do_funcionario, tipo, entrada_saida->quantidade, entrada_saida->produto_editado);
+    printf("Codigo %d, o funcionario de cpf %s, registrou a %s de %d produtos de codigo UPC %s\n",
+          entrada_saida->codigo, entrada_saida->cpf_do_funcionario, tipo, entrada_saida->quantidade, entrada_saida->produto_editado);
 };
 
 int listar_entrada_saida(void){

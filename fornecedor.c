@@ -37,8 +37,8 @@ void menu_fornecedor(void){
         printf("Digite o nome do cargo a ser excluido\n");
         fgets(nome, 45, stdin);
         nome[strcspn(nome, "\n")] = '\0';
-        Fornecedor *fornecedor_excluir = buscar_fornecedor(nome);
-        excluir_fornecedor(*fornecedor_excluir->nome);
+        Fornecedor *fornecedor_excl = buscar_fornecedor(nome);
+        excluir_fornecedor(fornecedor_excl);
         break;
       case 3:
         listar_fornecedores();
@@ -110,7 +110,7 @@ int gravar_fornecedor(Fornecedor *fornecedor_cad){
     free(fornecedor_cad);
 }
 
-int excluir_fornecedor(char nome){
+int excluir_fornecedor(Fornecedor *fornecedor){
     FILE *fleitura;
     FILE *fescrita;
     Fornecedor *auxiliarLeitura = (Fornecedor *) malloc(sizeof(Fornecedor));
@@ -127,15 +127,20 @@ int excluir_fornecedor(char nome){
         printf("Erro na criação do arquivo\n!");
         return 0;
     }
+    //Lendo o arquivo atual
     while (fread(auxiliarLeitura, sizeof(Fornecedor), 1, fleitura))
     {
-        if(*auxiliarLeitura->nome != nome){
+        //Caso a matricula seja diferente
+        if(strcmp(auxiliarLeitura->nome, fornecedor->nome) != 0){
+            //Escreva no arquivo novo
             fwrite(auxiliarLeitura,sizeof(Fornecedor), 1, fescrita);            
         }
     }  
     fclose(fescrita);
     fclose(fleitura);
+    //Renomeia o arquivo novo com o nome do antigo
     rename(ARQUIVO_FORNECEDORES_TEMPORARIOS,ARQUIVO_FORNECEDORES);
+    free(auxiliarLeitura);
     return 1;
 };
 
@@ -186,3 +191,31 @@ int atualizar_fornecedor(Fornecedor *fornecedor_edit){
 	fclose(fp);
 	free(fornecedor_lido);
 };
+
+Fornecedor* selecionar_fornecedor_por_digito(int posicao) {
+    FILE *fp;
+    Fornecedor *forn = (Fornecedor *)malloc(sizeof(Fornecedor));
+
+    fp = fopen(ARQUIVO_FORNECEDORES, "rb");
+    if (fp == NULL) {
+        perror("Erro ao abrir o arquivo para leitura");
+        return NULL;
+    }
+
+    // Mover o ponteiro do arquivo para a posição do funcionário desejado
+    if (fseek(fp, (posicao - 1) * sizeof(Fornecedor), SEEK_SET) != 0) {
+        perror("Erro ao buscar a posição no arquivo");
+        fclose(fp);
+        return NULL;
+    }
+
+    // Ler o funcionário
+    if (fread(&forn, sizeof(forn), 1, fp) != 1) {
+        perror("Erro ao ler o registro do arquivo");
+        fclose(fp);
+        return NULL;
+    }
+
+    fclose(fp);
+    return forn;
+}

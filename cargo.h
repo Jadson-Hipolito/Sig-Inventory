@@ -16,5 +16,6 @@ int excluir_cargo(char);
 Cargo* buscar_cargo(char *);
 int atualizar_cargo(Cargo *);
 int editar_nome_cargo(Cargo *);
+Cargo* selecionar_cargo_por_digito(int posicao);
 
 #endif

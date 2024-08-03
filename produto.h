@@ -18,7 +18,7 @@ typedef struct produto Produto;
 void menu_produto(void);
 int cadastro_produto(Produto *);
 int gravar_produto(Produto *);
-int excluir_produto(char codigo_produto);
+int excluir_produto(Produto *);
 int menu_buscar_produto(void);
 int listar_produto();
 int listar_produto_tipo(char *);

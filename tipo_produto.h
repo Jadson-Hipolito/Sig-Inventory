@@ -15,5 +15,6 @@ int gravar_tipo_produto(Tipo *);
 Tipo* buscar_tipo_produto(char [45]);
 int excluir_tipo_produto(char);
 void exibir_tipo(Tipo *tipo);
+Tipo* selecionar_tipo_por_digito(int);
 
 #endif

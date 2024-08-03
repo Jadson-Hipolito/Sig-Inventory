@@ -72,9 +72,12 @@ int listar_tipo_produto(void){
         return 0;
     }
     printf("-------------------------- Lista de Alunos --------------------------------\n");
+    int i=0;
     while (fread(tipo, sizeof(Tipo), 1, fp))
     {
+      i++;
       if (tipo->stats == true){
+       printf("%d-", i);
        exibir_tipo(tipo);
       }
     }
@@ -111,7 +114,7 @@ void exibir_tipo(Tipo *tipo){
           tipo->nome);
 };
 
-int excluir_tipo_produto(char nome){
+int excluir_tipo(Tipo *tipo){
     FILE *fleitura;
     FILE *fescrita;
     Tipo *auxiliarLeitura = (Tipo *) malloc(sizeof(Tipo));
@@ -119,18 +122,20 @@ int excluir_tipo_produto(char nome){
     fleitura = fopen(ARQUIVO_TIPOS, "rb");
     if (fleitura == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
     fescrita = fopen(ARQUIVO_TIPOS_TEMPORARIOS, "wb");
     if (fescrita == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
+    //Lendo o arquivo atual
     while (fread(auxiliarLeitura, sizeof(Tipo), 1, fleitura))
     {
-        if(*auxiliarLeitura->nome != nome){
+        //Caso a matricula seja diferente
+        if(strcmp(auxiliarLeitura->nome, tipo->nome) != 0){
             //Escreva no arquivo novo
             fwrite(auxiliarLeitura,sizeof(Tipo), 1, fescrita);            
         }
@@ -139,6 +144,7 @@ int excluir_tipo_produto(char nome){
     fclose(fleitura);
     //Renomeia o arquivo novo com o nome do antigo
     rename(ARQUIVO_TIPOS_TEMPORARIOS,ARQUIVO_TIPOS);
+    free(auxiliarLeitura);
     return 1;
 };
 
@@ -161,3 +167,31 @@ Tipo* buscar_tipo_produto(char *nome){
     fclose(fp);
     return NULL;
 };
+
+Tipo* selecionar_tipo_por_digito(int posicao) {
+    FILE *fp;
+    Tipo *tip = (Tipo *)malloc(sizeof(Tipo));
+
+    fp = fopen(ARQUIVO_TIPOS, "rb");
+    if (fp == NULL) {
+        perror("Erro ao abrir o arquivo para leitura");
+        return NULL;
+    }
+
+    // Mover o ponteiro do arquivo para a posição do funcionário desejado
+    if (fseek(fp, (posicao - 1) * sizeof(Tipo), SEEK_SET) != 0) {
+        perror("Erro ao buscar a posição no arquivo");
+        fclose(fp);
+        return NULL;
+    }
+
+    // Ler o funcionário
+    if (fread(&tip, sizeof(Tipo), 1, fp) != 1) {
+        perror("Erro ao ler o registro do arquivo");
+        fclose(fp);
+        return NULL;
+    }
+
+    fclose(fp);
+    return tip;
+}

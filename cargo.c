@@ -109,7 +109,7 @@ int gravar_cargo(Cargo *cargo_cad){
 	fclose(fp);
 }
 
-int excluir_cargo(char nome){
+int excluir_entrada_saida(Cargo *cargo){
     FILE *fleitura;
     FILE *fescrita;
     Cargo *auxiliarLeitura = (Cargo *) malloc(sizeof(Cargo));
@@ -117,18 +117,21 @@ int excluir_cargo(char nome){
     fleitura = fopen(ARQUIVO_CARGOS, "rb");
     if (fleitura == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
     fescrita = fopen(ARQUIVO_CARGOS_TEMPORARIOS, "wb");
     if (fescrita == NULL)
     {
-        printf("Erro na criacao do arquivo\n!");
+        printf("Erro na criação do arquivo\n!");
         return 0;
     }
+    //Lendo o arquivo atual
     while (fread(auxiliarLeitura, sizeof(Cargo), 1, fleitura))
     {
-        if(*auxiliarLeitura->nome != nome){
+        //Caso a matricula seja diferente
+        if((strcmp(auxiliarLeitura->nome, cargo->nome) != 0)){
+            //Escreva no arquivo novo
             fwrite(auxiliarLeitura,sizeof(Cargo), 1, fescrita);            
         }
     }  
@@ -136,6 +139,7 @@ int excluir_cargo(char nome){
     fclose(fleitura);
     //Renomeia o arquivo novo com o nome do antigo
     rename(ARQUIVO_CARGOS_TEMPORARIOS,ARQUIVO_CARGOS);
+    free(auxiliarLeitura);
     return 1;
 };
 
@@ -185,3 +189,31 @@ int atualizar_cargo(Cargo *cargo_edit){
 	fclose(fp);
 	free(cargo_lido);
 };
+
+Cargo* selecionar_cargo_por_digito(int posicao) {
+    FILE *fp;
+    Cargo *carg = (Cargo *)malloc(sizeof(Cargo));
+
+    fp = fopen(ARQUIVO_CARGOS, "rb");
+    if (fp == NULL) {
+        perror("Erro ao abrir o arquivo para leitura");
+        return NULL;
+    }
+
+    // Mover o ponteiro do arquivo para a posição do funcionário desejado
+    if (fseek(fp, (posicao - 1) * sizeof(Cargo), SEEK_SET) != 0) {
+        perror("Erro ao buscar a posição no arquivo");
+        fclose(fp);
+        return NULL;
+    }
+
+    // Ler o funcionário
+    if (fread(&carg, sizeof(carg), 1, fp) != 1) {
+        perror("Erro ao ler o registro do arquivo");
+        fclose(fp);
+        return NULL;
+    }
+
+    fclose(fp);
+    return carg;
+}
