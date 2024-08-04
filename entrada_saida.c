@@ -41,11 +41,15 @@ void menu_entrada_saida(void){
       break;
 
     case 3:
-      editar_entrada_saida_produto();
+      editar_entrada_saida();
       break;
 
     case 4:
-      remove_entrada_saida_produto();
+      Entrada_Saida *entrada_saida_exc = (Entrada_Saida *) malloc(sizeof(Entrada_Saida));
+      int codigo;
+        printf("Informe o codigo da entrada/saida: ");
+        scanf("%d", &codigo);
+      excluir_entrada_saida(entrada_saida_exc);
       break;
 
     case 5:
@@ -132,7 +136,7 @@ int gravar_entrada_ou_saida(Entrada_Saida *entrada_saida){
     fclose(fp);
 }
 
-void editar_entrada_saida_produto(void){
+void editar_entrada_saida(void){
   printf("\n===============================================\n");
   printf("=== <Editar Entrada e Saida de Produto> ===\n");
   printf("\n===============================================\n");

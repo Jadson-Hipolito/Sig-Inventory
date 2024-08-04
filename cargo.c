@@ -39,7 +39,7 @@ void menu_cargo(void){
         fgets(nome, 50, stdin);
         nome[strcspn(nome, "\n")] = '\0';
         Cargo *cargo_excluir = buscar_cargo(nome);
-        excluir_cargo(*cargo_excluir->nome);
+        excluir_cargo(cargo_excluir);
         break;
       case 3:
         listar_cargos();
@@ -109,7 +109,7 @@ int gravar_cargo(Cargo *cargo_cad){
 	fclose(fp);
 }
 
-int excluir_entrada_saida(Cargo *cargo){
+int excluir_cargo(Cargo *cargo){
     FILE *fleitura;
     FILE *fescrita;
     Cargo *auxiliarLeitura = (Cargo *) malloc(sizeof(Cargo));

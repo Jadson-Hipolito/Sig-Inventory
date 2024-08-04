@@ -75,12 +75,14 @@ int listar_fornecedores(void){
         printf("Erro no acesso do arquivo\n!");
         return 0;
     }
+    int num = 0;
     printf("---------------------- Lista de Fornecedores ----------------------------\n");
     while (fread(fornecedor, sizeof(Fornecedor), 1, fp))
     {
       if (fornecedor->stats == true){
-       printf("Nome: %s\n",
-          fornecedor->nome);
+       num++;
+       printf("%d-%s\n",
+          num, fornecedor->nome);
       }
     }
     printf("---------------------------------------------------------------------------\n");
@@ -196,26 +198,39 @@ Fornecedor* selecionar_fornecedor_por_digito(int posicao) {
     FILE *fp;
     Fornecedor *forn = (Fornecedor *)malloc(sizeof(Fornecedor));
 
-    fp = fopen(ARQUIVO_FORNECEDORES, "rb");
-    if (fp == NULL) {
-        perror("Erro ao abrir o arquivo para leitura");
+    if (forn == NULL) {
+        perror("Erro ao alocar memória");
         return NULL;
     }
 
-    // Mover o ponteiro do arquivo para a posição do funcionário desejado
+    fp = fopen("tipos.dat", "rb");
+    if (fp == NULL) {
+        perror("Erro ao abrir o arquivo para leitura");
+        free(forn);
+        return NULL;
+    }
+
+    // Mover o ponteiro do arquivo para a posição do tipo desejado
     if (fseek(fp, (posicao - 1) * sizeof(Fornecedor), SEEK_SET) != 0) {
         perror("Erro ao buscar a posição no arquivo");
         fclose(fp);
+        free(forn);
         return NULL;
     }
 
-    // Ler o funcionário
-    if (fread(&forn, sizeof(forn), 1, fp) != 1) {
-        perror("Erro ao ler o registro do arquivo");
+    // Ler o tipo
+    if (fread(forn, sizeof(Fornecedor), 1, fp) != 1) {
+        if (feof(fp)) {
+            fprintf(stderr, "Erro: A posição %d está além do final do arquivo.\n", posicao);
+        } else {
+            perror("Erro ao ler o registro do arquivo");
+        }
         fclose(fp);
+        free(forn);
         return NULL;
     }
 
     fclose(fp);
+    getchar();
     return forn;
 }

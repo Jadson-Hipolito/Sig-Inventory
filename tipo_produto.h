@@ -13,8 +13,8 @@ void cadastro_tipo_produto(Tipo *);
 int listar_tipo_produto(void);
 int gravar_tipo_produto(Tipo *);
 Tipo* buscar_tipo_produto(char [45]);
-int excluir_tipo_produto(char);
-void exibir_tipo(Tipo *tipo);
+int excluir_tipo(Tipo *);
+void exibir_tipo(Tipo *);
 Tipo* selecionar_tipo_por_digito(int);
 
 #endif

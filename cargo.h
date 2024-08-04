@@ -12,7 +12,7 @@ void menu_cargo(void);
 void cadastro_cargo(Cargo *);
 int listar_cargos(void);
 int gravar_cargo(Cargo *);
-int excluir_cargo(char);
+int excluir_cargo(Cargo *);
 Cargo* buscar_cargo(char *);
 int atualizar_cargo(Cargo *);
 int editar_nome_cargo(Cargo *);

@@ -38,7 +38,7 @@ void menu_tipo_produto(void){
         fgets(nome, 45, stdin);
         nome[strcspn(nome, "\n")] = '\0';
         Tipo *tipo_excluir = buscar_tipo_produto(nome);
-        excluir_tipo_produto(*tipo_excluir->nome);
+        excluir_tipo(tipo_excluir);
         break;
       case 3:
         listar_tipo_produto();
@@ -47,11 +47,11 @@ void menu_tipo_produto(void){
         break;
       case 4:
         listar_tipo_produto();
-        char nome_exluir[45];
+        Tipo *tip_exc = (Tipo *) malloc(sizeof(Tipo));
         printf("Digite o nome do tipo do produto: ");
-        fgets(nome_exluir, 45, stdin);
-        nome_exluir[strcspn(nome_exluir, "\n")] = '\0';
-        excluir_tipo_produto(* nome_exluir);
+        fgets(tip_exc->nome, 45, stdin);
+        tip_exc->nome[strcspn(tip_exc->nome, "\n")] = '\0';
+        excluir_tipo(tip_exc);
         break;
 
       default:
@@ -110,7 +110,7 @@ int gravar_tipo_produto(Tipo *tipo_cad){
 };
 
 void exibir_tipo(Tipo *tipo){
-    printf("Nome: %s\n",
+    printf("%s\n",
           tipo->nome);
 };
 
@@ -172,26 +172,40 @@ Tipo* selecionar_tipo_por_digito(int posicao) {
     FILE *fp;
     Tipo *tip = (Tipo *)malloc(sizeof(Tipo));
 
-    fp = fopen(ARQUIVO_TIPOS, "rb");
-    if (fp == NULL) {
-        perror("Erro ao abrir o arquivo para leitura");
+    if (tip == NULL) {
+        perror("Erro ao alocar memória");
         return NULL;
     }
 
-    // Mover o ponteiro do arquivo para a posição do funcionário desejado
+    fp = fopen("tipos.dat", "rb");
+    if (fp == NULL) {
+        perror("Erro ao abrir o arquivo para leitura");
+        free(tip);
+        return NULL;
+    }
+
+    // Mover o ponteiro do arquivo para a posição do tipo desejado
     if (fseek(fp, (posicao - 1) * sizeof(Tipo), SEEK_SET) != 0) {
         perror("Erro ao buscar a posição no arquivo");
         fclose(fp);
+        free(tip);
         return NULL;
     }
 
-    // Ler o funcionário
-    if (fread(&tip, sizeof(Tipo), 1, fp) != 1) {
-        perror("Erro ao ler o registro do arquivo");
+    // Ler o tipo
+    if (fread(tip, sizeof(Tipo), 1, fp) != 1) {
+        if (feof(fp)) {
+            fprintf(stderr, "Erro: A posição %d está além do final do arquivo.\n", posicao);
+        } else {
+            perror("Erro ao ler o registro do arquivo");
+        }
         fclose(fp);
+        free(tip);
         return NULL;
     }
 
     fclose(fp);
+    exibir_tipo(tip);
+    getchar();
     return tip;
 }

@@ -170,26 +170,28 @@ int cadastro_produto(Produto *produto) {
     scanf("%d", &produto->quantidade);
     getchar();
     
-    do{
-      char* digito;
-      printf("Digite o digito de um dos tipos abaixo\n");
-      listar_tipo_produto();
-      printf("Tipo: ");
-      fgets(digito, 45, stdin);
-      digito[strcspn(digito, "\n")] = '\0';
-      Tipo *tip = selecionar_tipo_por_digito(* digito);
-      strcpy(produto->tipo_produto, tip->nome);
-    } while(produto->tipo_produto != NULL);
+    int digito;
+    printf("Digite o digito de um dos tipos abaixo\n");
+    listar_tipo_produto();
+    printf("Tipo: ");
+    scanf("%d", &digito);
+    getchar();
+    Tipo *tip = selecionar_tipo_por_digito(digito);
+    strcpy(produto->tipo_produto, tip->nome);
 
     printf("Digite o local do produto: ");
     fgets(produto->local_produto, 5, stdin);
     produto->local_produto[strcspn(produto->local_produto, "\n")] = '\0';
     getchar();
 
+
+    printf("Digite o digito de um dos fornecedores abaixo\n");
     listar_fornecedores();
-    printf("Digite um dos fornecedores acima: ");
-    fgets(produto->fornecedor, 50, stdin);
-    produto->fornecedor[strcspn(produto->fornecedor, "\n")] = '\0';
+    printf("Fornecedor: ");
+    scanf("%d", &digito);
+    getchar();
+    Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
+    strcpy(produto->fornecedor, forn->fornecedor);
 
     printf("Digite a quantidade do produto para avisar nescessidade de reposição (Opcional): ");
     scanf("%d", &produto->quantidade_reposicao);
