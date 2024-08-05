@@ -163,7 +163,6 @@ int cadastro_produto(Produto *produto) {
         printf("Já existe um produto com esse codigo UPC registrado\n");
         upc_valido = false;
       }
-
     }
 
     printf("Digite a quantidade do produto: ");
@@ -191,7 +190,7 @@ int cadastro_produto(Produto *produto) {
     scanf("%d", &digito);
     getchar();
     Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
-    strcpy(produto->fornecedor, forn->fornecedor);
+    strcpy(produto->fornecedor, forn->nome);
 
     printf("Digite a quantidade do produto para avisar nescessidade de reposição (Opcional): ");
     scanf("%d", &produto->quantidade_reposicao);
@@ -309,7 +308,7 @@ int listar_produto(){
     printf("Erro no acesso do arquivo\n!");
     return 0;
   }
-  printf("-------------------------- Lista de Funcionarios --------------------------------\n");
+  printf("-------------------------- Lista de Produto ------------------------------\n");
   while (fread(produto, sizeof(Produto), 1, fp)){
     if (produto->stats == true){
       exibir_produto(produto);
@@ -378,15 +377,25 @@ void atualizar_local_produto(Produto *produtox){
 };
 
 void atualizar_fornecedor_produto(Produto *produtox){
-  printf("Digite o fornecedor do produto (opcional): ");
-  fgets(produtox->fornecedor, 50, stdin);
-  produtox->fornecedor[strcspn(produtox->fornecedor, "\n")] = '\0';
+  int digito;
+  printf("Digite o digito de um dos fornecedores abaixo\n");
+  listar_fornecedores();
+  printf("Fornecedor: ");
+  scanf("%d", &digito);
+  getchar();
+  Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
+  strcpy(produtox->fornecedor, forn->nome);
 };
 
 void atualizar_tipo_produto(Produto *produtox){
-  printf("Digite o tipo do produto (opcional): ");
-  fgets(produtox->tipo_produto, 45, stdin);
-  produtox->tipo_produto[strcspn(produtox->tipo_produto	, "\n")] = '\0';
+  char tipo_produto[45];
+  printf("Digite um dos tipos de produto abaixo.\n");
+  listar_tipo_produto();
+  printf("Tipo: ");
+  fgets(tipo_produto, 45, stdin);
+  tipo_produto[strcspn(tipo_produto, "\n")] = '\0';
+  limpaTela();
+  listar_produto_tipo(tipo_produto);
 };
 
 void atualizar_quantidade_reposicao(Produto *produtox){
@@ -499,10 +508,8 @@ int excluir_produto(Produto *produto){
     //Lendo o arquivo atual
     while (fread(auxiliarLeitura, sizeof(Produto), 1, fleitura))
     {
-        //Caso a matricula seja diferente
         if(strcmp(auxiliarLeitura->codigo_produto, produto->codigo_produto) != 0){
-            //Escreva no arquivo novo
-            fwrite(auxiliarLeitura,sizeof(Tipo), 1, fescrita);            
+            fwrite(auxiliarLeitura,sizeof(Produto), 1, fescrita);            
         }
     }  
     fclose(fescrita);

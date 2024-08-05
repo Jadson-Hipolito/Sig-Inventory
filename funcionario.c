@@ -135,8 +135,8 @@ int cadastro_funcionario(Funcionario *funcionario) {
       printf("cpf invalido! Digite novamente.\n");
     }
 
-    if (buscar_produto(funcionario->cpf) != NULL){
-      printf("Já existe um produto com esse codigo UPC registrado\n");
+    if (buscar_funcionario(funcionario->cpf) != NULL){
+      printf("Já existe um produto com esse cpf registrado\n");
       cpf_valido = false;
     }
   }
@@ -214,8 +214,7 @@ int excluir_funcionario(Funcionario *funcionario){
         return 0;
     }
     //Lendo o arquivo atual
-    while (fread(auxiliarLeitura, sizeof(Funcionario), 1, fleitura))
-    {
+    while (fread(auxiliarLeitura, sizeof(Funcionario), 1, fleitura)){
         //Caso a matricula seja diferente
         if(strcmp(auxiliarLeitura->cpf, funcionario->cpf) != 0){
             //Escreva no arquivo novo
@@ -298,7 +297,6 @@ void reativar_funcionario(void){
 		}
 	}
 	fclose(fp);
-	return NULL;
 };
 
 int menu_buscar_funcionario(void){
