@@ -10,6 +10,7 @@
 
 #define ARQUIVO_FUNCIONARIOS "funcionarios.dat"
 #define ARQUIVO_FUNCIONARIOS_TEMPORARIOS "funcionarios.tmp"
+#define ARQUIVO_CARGOS "cargo.dat"
 
 void menu_funcionario(void) {
   int option = 99;
@@ -119,6 +120,23 @@ int cadastro_funcionario(Funcionario *funcionario) {
   printf("======== <Cadastrar Funcionario> ========\n");
   printf("=========================================\n");
 
+  FILE *fp;
+  long tamanho_arquivo_cargos;
+
+  fp = fopen(ARQUIVO_CARGOS, "rb");
+  if (fp == NULL) {
+      printf("Erro ao abrir o arquivo.\n");
+      return -1;
+  }
+
+  fseek(fp, 0, SEEK_END);
+
+  tamanho_arquivo_cargos = ftell(fp);
+
+  fseek(fp, 0, SEEK_SET);
+
+  fclose(fp);
+
   printf("Digite o nome do funcionario: ");
   fgets(funcionario->nome, 50, stdin);
   funcionario->nome[strcspn(funcionario->nome, "\n")] = '\0';
@@ -159,21 +177,22 @@ int cadastro_funcionario(Funcionario *funcionario) {
     do{
       printf("Digite o digito de um dos cargos abaixo\n");
       listar_cargos();
-      printf("0 - Cadastrar novo cargo\n");
+      printf("0 - Cadastrar novo tipo\n");
       printf("Cargo: ");
       scanf("%d", &digito);
       getchar();
       if (digito == 0){
         Cargo *carg_cad = (Cargo *) malloc(sizeof(Cargo));
         cadastro_cargo(carg_cad);
-        free(carg_cad);
       }
-      if (digito != 0){
+      if ((digito != 0) && (digito <= tamanho_arquivo_cargos)){
         Cargo *carg = selecionar_cargo_por_digito(digito);
         strcpy(funcionario->cargo, carg->nome);
-        free(carg);
       }
-    }while (digito == 0);
+      if (digito > tamanho_arquivo_cargos){
+        printf("Numero de cargo invalido\n");
+      }
+    }while ((digito == 0) || (digito > tamanho_arquivo_cargos));
 
   printf("Digite o endereço do funcionario: ");
   fgets(funcionario->endereco, 100, stdin);

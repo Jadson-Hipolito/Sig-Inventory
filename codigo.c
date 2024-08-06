@@ -49,7 +49,8 @@ int main(){
     menu_fornecedor();
     break;
    case 7:
-    printf("Feito por Jadson Hipólito de Almeida\n Usando como base funções de Prof. Flavius Gorgonio, Prof. Arthur Souza e chat GPT");
+    printf("Feito por Jadson Hipólito de Almeida\n");
+    printf("Usando como base funções de Prof. Flavius Gorgonio, Prof. Arthur Souza e chat GPT\n");
     delay(2000);
    default:
     printf("Deve digitar um número");

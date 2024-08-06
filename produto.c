@@ -11,6 +11,7 @@
 #define ARQUIVO_PRODUTOS "produto.dat"
 #define ARQUIVO_TIPOS "tipos.dat"
 #define ARQUIVO_PRODUTOS_TEMPORARIOS "produtos.tmp"
+#define ARQUIVO_FORNECEDORES "fornecedores.dat"
 
 void menu_produto(){
     int option = 99;
@@ -142,6 +143,42 @@ int cadastro_produto(Produto *produto) {
     printf("======== <Cadastrar Produto> ========\n");
     printf("=====================================\n");
 
+    FILE *fp;
+    long tamanho_arquivo_tipos;
+
+    fp = fopen(ARQUIVO_TIPOS, "rb");
+    if (fp == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return -1;
+    }
+
+    fseek(fp, 0, SEEK_END);
+
+    tamanho_arquivo_tipos = ftell(fp);
+
+    fseek(fp, 0, SEEK_SET);
+
+    fclose(fp);
+
+
+
+    FILE *arquivo;
+    long tamanho_arquivo_fornecedores;
+
+    arquivo = fopen(ARQUIVO_FORNECEDORES, "rb");
+    if (fp == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return -1;
+    }
+
+    fseek(arquivo, 0, SEEK_END);
+
+    tamanho_arquivo_fornecedores = ftell(fp);
+
+    fseek(arquivo, 0, SEEK_SET);
+
+    fclose(arquivo);
+
     printf("Digite o nome do produto: ");
     fgets(produto->nome_produto, 100, stdin);
     produto->nome_produto[strcspn(produto->nome_produto, "\n")] = '\0';
@@ -177,16 +214,17 @@ int cadastro_produto(Produto *produto) {
       scanf("%d", &digito);
       getchar();
       if (digito == 0){
-        Tipo *tipo_cad = (Tipo *) malloc(sizeof(Tipo));
-        cadastro_tipo_produto(tipo_cad);
-        free(tipo_cad);
+        Tipo *tip_cad = (Tipo *) malloc(sizeof(Tipo));
+        cadastro_tipo_produto(tip_cad);
       }
-      if (digito != 0){
+      if ((digito != 0) && (digito <= tamanho_arquivo_tipos)){
         Tipo *tip = selecionar_tipo_por_digito(digito);
         strcpy(produto->tipo_produto, tip->nome);
-        free(tip);
       }
-    }while (digito == 0);
+      if (digito > tamanho_arquivo_tipos){
+        printf("Numero de tipo invalido\n");
+      }
+    }while ((digito == 0) || (digito > tamanho_arquivo_tipos));
 
     printf("Digite o local do produto: ");
     fgets(produto->local_produto, 5, stdin);
@@ -205,11 +243,14 @@ int cadastro_produto(Produto *produto) {
         Fornecedor *forn_cad = (Fornecedor *) malloc(sizeof(Fornecedor));
         cadastro_fornecedor(forn_cad);
       }
-      if (digito != 0){
+      if ((digito != 0) && (digito <= tamanho_arquivo_fornecedores)){
         Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
         strcpy(produto->fornecedor, forn->nome);
       }
-    }while (digito == 0);
+      if (digito > tamanho_arquivo_fornecedores){
+        printf("Numero de fornecedor invalido\n");
+      }
+    }while ((digito == 0) || (digito > tamanho_arquivo_fornecedores));
 
     printf("Digite a quantidade do produto para avisar nescessidade de reposição (Opcional): ");
     scanf("%d", &produto->quantidade_reposicao);

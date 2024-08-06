@@ -6,7 +6,7 @@ struct entrada_saida {
     char cpf_do_funcionario[12];
     int quantidade;
     char anotacao_da_entrada_saida[100];
-    char tipo[10];
+    int tipo;
     long long codigo;
     int ano;
     int mes;
@@ -19,7 +19,7 @@ typedef struct entrada_saida Entrada_Saida;
 
 void menu_entrada_saida(void);
 void entrada_e_saida(Entrada_Saida *, int sinal);
-void editar_entrada_saida(void);
+int editar_entrada_saida(void);
 int excluir_entrada_saida(Entrada_Saida *);
 int gravar_entrada_ou_saida(Entrada_Saida *);
 int listar_entrada_saida(void);

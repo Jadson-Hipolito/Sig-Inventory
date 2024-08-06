@@ -95,7 +95,7 @@ void entrada_e_saida(Entrada_Saida *entrada_saida, int sinal){
     fgets(entrada_saida->anotacao_da_entrada_saida, 100, stdin);
     entrada_saida->anotacao_da_entrada_saida[strcspn(entrada_saida->anotacao_da_entrada_saida, "\n")] = '\0';
 
-    printf("%s\n", entrada_saida->tipo);
+    printf("%d\n", entrada_saida->tipo);
     delay(5000);
 
     time_t now;
@@ -118,7 +118,7 @@ void entrada_e_saida(Entrada_Saida *entrada_saida, int sinal){
 
     entrada_saida->stats = 1;
 
-    * entrada_saida->tipo = sinal;
+    entrada_saida->tipo = sinal;
     
 
     gravar_entrada_ou_saida(entrada_saida);
@@ -140,7 +140,7 @@ int gravar_entrada_ou_saida(Entrada_Saida *entrada_saida){
     fclose(fp);
 }
 
-void editar_entrada_saida(void){
+int editar_entrada_saida(void){
   printf("\n===============================================\n");
   printf("=== <Editar Entrada e Saida de Produto> ===\n");
   printf("\n===============================================\n");
