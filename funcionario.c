@@ -124,23 +124,22 @@ int cadastro_funcionario(Funcionario *funcionario) {
   funcionario->nome[strcspn(funcionario->nome, "\n")] = '\0';
 
   bool cpf_valido = false;
-  while (!cpf_valido) {
-    printf("Digite o cpf do funcionario: ");
-    fgets(funcionario->cpf, 12, stdin);
-    funcionario->cpf[strcspn(funcionario->cpf, "\n")] = '\0';
-    printf("%s\n", funcionario->cpf);
+    while (!cpf_valido) {
+      printf("Digite o Cpf do produto: ");
+      fgets(funcionario->cpf, 12, stdin);
+      funcionario->cpf[strcspn(funcionario->cpf, "\n")] = '\0';
+      printf("%s\n", funcionario->cpf);
+      cpf_valido = validar_cpf(funcionario->cpf);
 
-    cpf_valido = validar_cpf(funcionario->cpf);
-    if (!cpf_valido) {
-      printf("cpf invalido! Digite novamente.\n");
-    }
+      if (!cpf_valido) {
+        printf("Cpf invalido! Digite novamente.\n");
+      }
 
-    if (buscar_funcionario(funcionario->cpf) != NULL){
-      printf("Já existe um produto com esse cpf registrado\n");
-      cpf_valido = false;
+      if (buscar_funcionario(funcionario->cpf) != NULL){
+        printf("Já existe um produto com esse cpf registrado\n");
+        cpf_valido = false;
+      }
     }
-  }
-  getchar();
 
   bool numero_valido = false;
   while (!numero_valido) {
@@ -156,10 +155,25 @@ int cadastro_funcionario(Funcionario *funcionario) {
   }
   getchar();
   
-  listar_cargos();
-  printf("Digite um dos cargos acima: ");
-  fgets(funcionario->cargo, 50, stdin);
-  funcionario->cargo[strcspn(funcionario->cargo, "\n")] = '\0';
+  int digito;
+    do{
+      printf("Digite o digito de um dos cargos abaixo\n");
+      listar_cargos();
+      printf("0 - Cadastrar novo cargo\n");
+      printf("Cargo: ");
+      scanf("%d", &digito);
+      getchar();
+      if (digito == 0){
+        Cargo *carg_cad = (Cargo *) malloc(sizeof(Cargo));
+        cadastro_cargo(carg_cad);
+        free(carg_cad);
+      }
+      if (digito != 0){
+        Cargo *carg = selecionar_cargo_por_digito(digito);
+        strcpy(funcionario->cargo, carg->nome);
+        free(carg);
+      }
+    }while (digito == 0);
 
   printf("Digite o endereço do funcionario: ");
   fgets(funcionario->endereco, 100, stdin);
@@ -332,9 +346,25 @@ void atualizar_numero(Funcionario *funcionario_busc){
 };
 
 void atualizar_cargo_funcionario(Funcionario *funcionario_busc){
-  printf("Informe o nome do produto: ");
-  fgets(funcionario_busc->cargo, 50, stdin);
-  funcionario_busc->cargo[strcspn(funcionario_busc->cargo, "\n")] = '\0';
+  int digito;
+    do{
+      printf("Digite o digito de um dos cargos abaixo\n");
+      listar_cargos();
+      printf("0 - Cadastrar novo cargo\n");
+      printf("Cargo: ");
+      scanf("%d", &digito);
+      getchar();
+      if (digito == 0){
+        Cargo *carg_cad = (Cargo *) malloc(sizeof(Cargo));
+        cadastro_cargo(carg_cad);
+        free(carg_cad);
+      }
+      if (digito != 0){
+        Cargo *carg = selecionar_cargo_por_digito(digito);
+        strcpy(funcionario_busc->cargo, carg->nome);
+        free(carg);
+      }
+    }while (digito == 0);
 };
 
 void atualizar_endereco(Funcionario *funcionario_busc){

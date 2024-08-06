@@ -3,14 +3,14 @@
 #include <stdbool.h>
 
 struct produto {
-    char nome_produto[50];
+    char nome_produto[100];
     char codigo_produto[13];
     int quantidade;
-    char tipo_produto[45];
+    char tipo_produto[50];
     char local_produto[5];
     char fornecedor[50];
     int quantidade_reposicao;
-    char anotacao_armazenamento[100];
+    char anotacao_armazenamento[200];
     int stats;
 };
 typedef struct produto Produto;
@@ -20,7 +20,8 @@ int cadastro_produto(Produto *);
 int gravar_produto(Produto *);
 int excluir_produto(Produto *);
 int menu_buscar_produto(void);
-int listar_produto();
+int listar_produto(void);
+int listar_produto_repor(void);
 int listar_produto_tipo(char *);
 int listar_produto_fornecedor(char *);
 bool validar_upc(const char *upc);

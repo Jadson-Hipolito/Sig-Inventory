@@ -203,7 +203,7 @@ Fornecedor* selecionar_fornecedor_por_digito(int posicao) {
         return NULL;
     }
 
-    fp = fopen("tipos.dat", "rb");
+    fp = fopen("fornecedores.dat", "rb");
     if (fp == NULL) {
         perror("Erro ao abrir o arquivo para leitura");
         free(forn);

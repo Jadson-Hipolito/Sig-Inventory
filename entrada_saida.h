@@ -7,7 +7,12 @@ struct entrada_saida {
     int quantidade;
     char anotacao_da_entrada_saida[100];
     char tipo[10];
-    int codigo;
+    long long codigo;
+    int ano;
+    int mes;
+    int dia;
+    int hora;
+    int minute;
     int stats;
 };
 typedef struct entrada_saida Entrada_Saida;

@@ -53,7 +53,7 @@ void menu_entrada_saida(void){
       break;
 
     case 5:
-      listar_produto(3);
+      listar_produto_repor();
       break;
 
     case 6:
@@ -105,12 +105,16 @@ void entrada_e_saida(Entrada_Saida *entrada_saida, int sinal){
     struct tm *local = localtime(&now);
 
     // Extrair ano, mês, dia, hora, minuto e segundo
-    entrada_saida->codigo = (local->tm_year + 1900)*10000000000;
-    entrada_saida->codigo += (local->tm_mon + 1)*100000000;
-    entrada_saida->codigo += (local->tm_mday)*1000000;
-    entrada_saida->codigo += (local->tm_hour)*10000;
-    entrada_saida->codigo += (local->tm_min)*100;
-    entrada_saida->codigo += (local->tm_sec);
+    entrada_saida->codigo = (local->tm_year + 1900)*100000000;
+    entrada_saida->ano = (local->tm_year + 1900);
+    entrada_saida->codigo += (local->tm_mon + 1)*1000000;
+    entrada_saida->mes = (local->tm_mon + 1);
+    entrada_saida->codigo += (local->tm_mday)*10000;
+    entrada_saida->dia = (local->tm_mday);
+    entrada_saida->codigo += (local->tm_hour)*100;
+    entrada_saida->hora = (local->tm_hour);
+    entrada_saida->codigo += (local->tm_min);
+    entrada_saida->minute = (local->tm_min);
 
     entrada_saida->stats = 1;
 
@@ -186,13 +190,13 @@ void exibir_entrada_saida(Entrada_Saida *entrada_saida){
     if (entrada_saida < 0){
       strcpy(tipo,"entrada");
     }
-    printf("Codigo %d, o funcionario de cpf %s, registrou a %s de %d produtos de codigo UPC %s\n",
-          entrada_saida->codigo, entrada_saida->cpf_do_funcionario, tipo, entrada_saida->quantidade, entrada_saida->produto_editado);
+    printf("Codigo: %lld, Cpf funcionario: %s, %s de: %d produtos de codigo UPC %s, Data: %d/%d/%d %d:%d\n",
+          entrada_saida->codigo, entrada_saida->cpf_do_funcionario, tipo, entrada_saida->quantidade, entrada_saida->produto_editado, entrada_saida->dia, entrada_saida->mes, entrada_saida->ano, entrada_saida->hora, entrada_saida->minute);
 };
 
 int listar_entrada_saida(void){
     FILE *fp;
-    Entrada_Saida *entrada_saida = (Entrada_Saida*) malloc(sizeof(Entrada_Saida));
+    Entrada_Saida *ent_sai = (Entrada_Saida*) malloc(sizeof(Entrada_Saida));
     
     fp = fopen(ARQUIVO_ENTRADA_E_SAIDA, "rb");
     if (fp == NULL)
@@ -200,14 +204,14 @@ int listar_entrada_saida(void){
         printf("Erro no acesso do arquivo\n!");
         return 0;
     }
-    printf("--------------------- Lista de Entradas e Saida --------------------------\n");
-    while (fread(entrada_saida, sizeof(Entrada_Saida), 1, fp))
+    printf("--------------------- Lista de Entradas e Saidas ------------------------\n");
+    while (fread(ent_sai, sizeof(Entrada_Saida), 1, fp))
     {
-      if (entrada_saida->stats == true){
-       exibir_entrada_saida(entrada_saida);
+      if (ent_sai->stats == true){
+       exibir_entrada_saida(ent_sai);
       }
     }
     printf("---------------------------------------------------------------------------\n");
     getchar();
-    limpaTela();
+    free(ent_sai);
 };

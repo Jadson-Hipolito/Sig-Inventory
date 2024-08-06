@@ -91,41 +91,40 @@ void menu_produto(){
               break;
             case 3:
               int escolha = menu_filtro_produto();
-              switch (escolha)
-              {
-              case 0:
-                listar_produto();
-                getchar();
-                break;
+              int digito;
+              switch (escolha){
+                case 0:
+                  listar_produto();
+                  getchar();
+                  break;
 
-              case 1:
-                char tipo_produto[45];
-                printf("Digite um dos tipos de produto abaixo.\n");
-                listar_tipo_produto();
-                printf("Tipo: ");
-                fgets(tipo_produto, 45, stdin);
-                tipo_produto[strcspn(tipo_produto, "\n")] = '\0';
-                limpaTela();
-                listar_produto_tipo(tipo_produto);
-                break;
+                case 1:
+                  printf("Digite o digito de um dos tipos abaixo\n");
+                  listar_tipo_produto();
+                  printf("Tipo: ");
+                  scanf("%d", &digito);
+                  getchar();
+                  Tipo *tip = selecionar_tipo_por_digito(digito);
+                  listar_produto_tipo(tip->nome);
+                  free(tip);
+                  break;
 
-              case 2:
-                char fornecedor[50];
-                printf("Digite um dos fornecedores abaixo.\n");
-                listar_fornecedores();
-                printf("Fornecedor: ");
-                fgets(fornecedor, 45, stdin);
-                fornecedor[strcspn(fornecedor, "\n")] = '\0';
-                limpaTela();
-                listar_produto_fornecedor(fornecedor);
-                break;
+                case 2:
+                  printf("Digite o digito de um dos fornecedores abaixo\n");
+                  listar_tipo_produto();
+                  printf("Tipo: ");
+                  scanf("%d", &digito);
+                  getchar();
+                  Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
+                  listar_produto_tipo(forn->nome);
+                  free(forn);
+                  break;
               
-              default:
-                break;
+                default:
+                  break;
               }
               limpaTela();
               break;
-
             case 4:
               reativar_produto();
               break;
@@ -144,7 +143,7 @@ int cadastro_produto(Produto *produto) {
     printf("=====================================\n");
 
     printf("Digite o nome do produto: ");
-    fgets(produto->nome_produto, 50, stdin);
+    fgets(produto->nome_produto, 100, stdin);
     produto->nome_produto[strcspn(produto->nome_produto, "\n")] = '\0';
 
     bool upc_valido = false;
@@ -170,13 +169,24 @@ int cadastro_produto(Produto *produto) {
     getchar();
     
     int digito;
-    printf("Digite o digito de um dos tipos abaixo\n");
-    listar_tipo_produto();
-    printf("Tipo: ");
-    scanf("%d", &digito);
-    getchar();
-    Tipo *tip = selecionar_tipo_por_digito(digito);
-    strcpy(produto->tipo_produto, tip->nome);
+    do{
+      printf("Digite o digito de um dos tipos abaixo\n");
+      listar_tipo_produto();
+      printf("0 - Cadastrar novo tipo\n");
+      printf("Tipo: ");
+      scanf("%d", &digito);
+      getchar();
+      if (digito == 0){
+        Tipo *tipo_cad = (Tipo *) malloc(sizeof(Tipo));
+        cadastro_tipo_produto(tipo_cad);
+        free(tipo_cad);
+      }
+      if (digito != 0){
+        Tipo *tip = selecionar_tipo_por_digito(digito);
+        strcpy(produto->tipo_produto, tip->nome);
+        free(tip);
+      }
+    }while (digito == 0);
 
     printf("Digite o local do produto: ");
     fgets(produto->local_produto, 5, stdin);
@@ -184,13 +194,22 @@ int cadastro_produto(Produto *produto) {
     getchar();
 
 
-    printf("Digite o digito de um dos fornecedores abaixo\n");
-    listar_fornecedores();
-    printf("Fornecedor: ");
-    scanf("%d", &digito);
-    getchar();
-    Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
-    strcpy(produto->fornecedor, forn->nome);
+    do{
+      printf("Digite o digito de um dos fornecedores abaixo\n");
+      listar_fornecedores();
+      printf("0 - Cadastrar novo fornecedor\n");
+      printf("Fornecedor: ");
+      scanf("%d", &digito);
+      getchar();
+      if (digito == 0){
+        Fornecedor *forn_cad = (Fornecedor *) malloc(sizeof(Fornecedor));
+        cadastro_fornecedor(forn_cad);
+      }
+      if (digito != 0){
+        Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
+        strcpy(produto->fornecedor, forn->nome);
+      }
+    }while (digito == 0);
 
     printf("Digite a quantidade do produto para avisar nescessidade de reposição (Opcional): ");
     scanf("%d", &produto->quantidade_reposicao);
@@ -299,7 +318,7 @@ int gravar_produto(Produto *produto){
 	fclose(fp);
 }
 
-int listar_produto(){
+int listar_produto(void){
   FILE *fp;
   Produto *produto = (Produto*) malloc(sizeof(Produto));
     
@@ -318,6 +337,25 @@ int listar_produto(){
   getchar();
 };
 
+int listar_produto_repor(void){
+  FILE *fp;
+  Produto *produto = (Produto*) malloc(sizeof(Produto));
+    
+  fp = fopen(ARQUIVO_PRODUTOS, "rb");
+  if (fp == NULL){
+    printf("Erro no acesso do arquivo\n!");
+    return 0;
+  }
+  printf("-------------------------- Lista de Produto ------------------------------\n");
+  while (fread(produto, sizeof(Produto), 1, fp)){
+    if ((produto->stats == true) && (produto->quantidade_reposicao > produto->quantidade_reposicao)){
+      exibir_produto(produto);
+    }
+  }
+  printf("---------------------------------------------------------------------------\n");
+  getchar();
+};
+
 int listar_produto_tipo(char *tipo_produto){
   FILE *fp;
   Produto *produto = (Produto*) malloc(sizeof(Produto));
@@ -327,7 +365,7 @@ int listar_produto_tipo(char *tipo_produto){
     printf("Erro no acesso do arquivo\n!");
     return 0;
   }
-  printf("-------------------------- Lista de Funcionarios --------------------------------\n");
+  printf("-------------------------- Lista de Produtos ------------------------------\n");
   while (fread(produto, sizeof(Produto), 1, fp)){
     if ((produto->stats == true) && (strcmp(produto->tipo_produto, tipo_produto) == 0)){
       exibir_produto(produto);
@@ -347,7 +385,7 @@ int listar_produto_fornecedor(char *fornecedor){
     printf("Erro no acesso do arquivo\n!");
     return 0;
   }
-  printf("-------------------------- Lista de Funcionarios --------------------------------\n");
+  printf("-------------------------- Lista de Produtos -----------------------------\n");
   while (fread(produto, sizeof(Produto), 1, fp)){
     if ((produto->stats == true) && (strcmp(produto->fornecedor, fornecedor) == 0)){
       exibir_produto(produto);
@@ -360,7 +398,7 @@ int listar_produto_fornecedor(char *fornecedor){
 
 void atualizar_nome_produto(Produto *produtox){
   printf("Informe o nome do produto: ");
-  fgets(produtox->nome_produto, 50, stdin);
+  fgets(produtox->nome_produto, 100, stdin);
   produtox->nome_produto[strcspn(produtox->nome_produto, "\n")] = '\0';
 };
 
@@ -378,24 +416,42 @@ void atualizar_local_produto(Produto *produtox){
 
 void atualizar_fornecedor_produto(Produto *produtox){
   int digito;
-  printf("Digite o digito de um dos fornecedores abaixo\n");
-  listar_fornecedores();
-  printf("Fornecedor: ");
-  scanf("%d", &digito);
-  getchar();
-  Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
-  strcpy(produtox->fornecedor, forn->nome);
+  do{
+      printf("Digite o digito de um dos fornecedores abaixo\n");
+      listar_fornecedores();
+      printf("0 - Cadastrar novo fornecedor\n");
+      printf("Fornecedor: ");
+      scanf("%d", &digito);
+      getchar();
+      if (digito == 0){
+        Fornecedor *forn_cad = (Fornecedor *) malloc(sizeof(Fornecedor));
+        cadastro_fornecedor(forn_cad);
+      }
+      if (digito != 0){
+        Fornecedor *forn = selecionar_fornecedor_por_digito(digito);
+        strcpy(produtox->fornecedor, forn->nome);
+      }
+    }while (digito == 0);
 };
 
 void atualizar_tipo_produto(Produto *produtox){
-  char tipo_produto[45];
-  printf("Digite um dos tipos de produto abaixo.\n");
-  listar_tipo_produto();
-  printf("Tipo: ");
-  fgets(tipo_produto, 45, stdin);
-  tipo_produto[strcspn(tipo_produto, "\n")] = '\0';
-  limpaTela();
-  listar_produto_tipo(tipo_produto);
+  int digito;
+    do{
+      printf("Digite o digito de um dos tipos abaixo\n");
+      listar_tipo_produto();
+      printf("0 - Cadastrar novo tipo\n");
+      printf("Tipo: ");
+      scanf("%d", &digito);
+      getchar();
+      if (digito == 0){
+        Tipo *tipo_cad = (Tipo *) malloc(sizeof(Tipo));
+        cadastro_tipo_produto(tipo_cad);
+      }
+      if (digito != 0){
+        Tipo *tip = selecionar_tipo_por_digito(digito);
+        strcpy(produtox->tipo_produto, tip->nome);
+      }
+    }while (digito == 0);
 };
 
 void atualizar_quantidade_reposicao(Produto *produtox){
@@ -406,7 +462,7 @@ void atualizar_quantidade_reposicao(Produto *produtox){
 
 void atualizar_anotacoes(Produto *produtox){
   printf("Digite uma nota de armazenamento para o produto (opcional): ");
-  fgets(produtox->anotacao_armazenamento, 50, stdin);
+  fgets(produtox->anotacao_armazenamento, 200, stdin);
   produtox->anotacao_armazenamento[strcspn(produtox->anotacao_armazenamento, "\n")] = '\0';
 };
 

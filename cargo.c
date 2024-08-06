@@ -76,12 +76,14 @@ int listar_cargos(void){
         printf("Erro no acesso do arquivo\n!");
         return 0;
     }
-    printf("-------------------------- Lista de Cargos --------------------------------\n");
+    int num = 0;
+    printf("---------------------- Lista de Fornecedores ----------------------------\n");
     while (fread(cargo, sizeof(Cargo), 1, fp))
     {
       if (cargo->stats == true){
-       printf("Nome: %s\n",
-          cargo->nome);
+       num++;
+       printf("%d-%s\n",
+          num, cargo->nome);
       }
     }
     printf("---------------------------------------------------------------------------\n");
@@ -194,26 +196,39 @@ Cargo* selecionar_cargo_por_digito(int posicao) {
     FILE *fp;
     Cargo *carg = (Cargo *)malloc(sizeof(Cargo));
 
-    fp = fopen(ARQUIVO_CARGOS, "rb");
-    if (fp == NULL) {
-        perror("Erro ao abrir o arquivo para leitura");
+    if (carg == NULL) {
+        perror("Erro ao alocar memória");
         return NULL;
     }
 
-    // Mover o ponteiro do arquivo para a posição do funcionário desejado
+    fp = fopen("cargo.dat", "rb");
+    if (fp == NULL) {
+        perror("Erro ao abrir o arquivo para leitura");
+        free(carg);
+        return NULL;
+    }
+
+    // Mover o ponteiro do arquivo para a posição do tipo desejado
     if (fseek(fp, (posicao - 1) * sizeof(Cargo), SEEK_SET) != 0) {
         perror("Erro ao buscar a posição no arquivo");
         fclose(fp);
+        free(carg);
         return NULL;
     }
 
-    // Ler o funcionário
-    if (fread(&carg, sizeof(carg), 1, fp) != 1) {
-        perror("Erro ao ler o registro do arquivo");
+    // Ler o tipo
+    if (fread(carg, sizeof(Cargo), 1, fp) != 1) {
+        if (feof(fp)) {
+            fprintf(stderr, "Erro: A posição %d está além do final do arquivo.\n", posicao);
+        } else {
+            perror("Erro ao ler o registro do arquivo");
+        }
         fclose(fp);
+        free(carg);
         return NULL;
     }
 
     fclose(fp);
+    getchar();
     return carg;
 }
