@@ -20,7 +20,7 @@ void menu_entrada_saida(void){
   printf("=============================================\n");
   printf("1 - Entradas de Produto\n");
   printf("2 - Saida de Produto\n");
-  printf("3 - Editar Entrada e Saida\n");
+  printf("3 - Editar Quantidade de Entrada/Saida\n");
   printf("4 - Remover Entrada ou saida\n");
   printf("5 - listar produtos que precisam repor\n");
   printf("6 - listar entradas e saidas\n");
@@ -140,13 +140,6 @@ int gravar_entrada_ou_saida(Entrada_Saida *entrada_saida){
     fclose(fp);
 }
 
-int editar_entrada_saida(void){
-  printf("\n===============================================\n");
-  printf("=== <Editar Entrada e Saida de Produto> ===\n");
-  printf("\n===============================================\n");
-  printf("Codigo do produto que ira editar a entrada:\n");
-}
-
 int excluir_entrada_saida(Entrada_Saida *entrada_saida){
     FILE *fleitura;
     FILE *fescrita;
@@ -215,3 +208,60 @@ int listar_entrada_saida(void){
     getchar();
     free(ent_sai);
 };
+
+void editar_entrada_saida(void) {
+    FILE *fleitura;
+    FILE *fescrita;
+    Entrada_Saida *entrada_saida = (Entrada_Saida *) malloc(sizeof(Entrada_Saida));
+    long long codigo;
+    int nova_quantidade;
+
+    printf("Informe o código da entrada/saida que deseja editar: ");
+    scanf("%lld", &codigo);
+
+    fleitura = fopen(ARQUIVO_ENTRADA_E_SAIDA, "rb");
+    if (fleitura == NULL) {
+        printf("Erro ao abrir o arquivo para leitura.\n");
+        return;
+    }
+    fescrita = fopen(ARQUIVO_ENTRADA_E_SAIDA_TEMPORARIO, "wb");
+    if (fescrita == NULL) {
+        printf("Erro ao abrir o arquivo temporário para escrita.\n");
+        fclose(fleitura);
+        return;
+    }
+
+
+    while (fread(entrada_saida, sizeof(Entrada_Saida), 1, fleitura)) {
+        if (entrada_saida->codigo == codigo) {
+            // Exibir entrada/saida atual
+            exibir_entrada_saida(entrada_saida);
+
+            // Solicitar nova quantidade
+            printf("Informe a nova quantidade: ");
+            scanf("%d", &nova_quantidade);
+
+            // Atualizar a quantidade do produto
+            Produto *produto = buscar_produto(entrada_saida->produto_editado);
+            if (produto != NULL) {
+                produto->quantidade += (nova_quantidade - entrada_saida->quantidade) * entrada_saida->tipo;
+                atualiza_produto(produto);
+            }
+
+            // Atualizar a quantidade na entrada_saida
+            entrada_saida->quantidade = nova_quantidade;
+        }
+
+        // Escrever o registro no arquivo temporário
+        fwrite(entrada_saida, sizeof(Entrada_Saida), 1, fescrita);
+    }
+
+    fclose(fescrita);
+    fclose(fleitura);
+
+    // Substituir o arquivo original pelo temporário
+    remove(ARQUIVO_ENTRADA_E_SAIDA);
+    rename(ARQUIVO_ENTRADA_E_SAIDA_TEMPORARIO, ARQUIVO_ENTRADA_E_SAIDA);
+
+    free(entrada_saida);
+}
