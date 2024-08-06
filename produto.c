@@ -347,9 +347,11 @@ int listar_produto_repor(void){
     return 0;
   }
   printf("-------------------------- Lista de Produto ------------------------------\n");
-  while (fread(produto, sizeof(Produto), 1, fp)){
-    if ((produto->stats == true) && (produto->quantidade_reposicao > produto->quantidade_reposicao)){
-      exibir_produto(produto);
+  while (fread(produto, sizeof(Produto), 1, fp) == 1) {
+    if (produto->quantidade_reposicao > produto->quantidade) {
+      if (produto->stats) {
+        exibir_produto(produto);
+      }
     }
   }
   printf("---------------------------------------------------------------------------\n");

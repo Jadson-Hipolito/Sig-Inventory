@@ -77,7 +77,7 @@ int listar_cargos(void){
         return 0;
     }
     int num = 0;
-    printf("---------------------- Lista de Fornecedores ----------------------------\n");
+    printf("--------------------------- Lista de Cargos -------------------------------\n");
     while (fread(cargo, sizeof(Cargo), 1, fp))
     {
       if (cargo->stats == true){
@@ -91,7 +91,7 @@ int listar_cargos(void){
 
 void cadastro_cargo(Cargo *cargo_cad) {
     printf("\n=====================================\n");
-    printf("==== <Cadastrar Cargo> ====\n");
+    printf("========= <Cadastrar Cargo> =========\n");
     printf("=====================================\n");
 
     printf("Digite o nome do cargo: ");

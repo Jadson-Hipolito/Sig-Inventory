@@ -71,7 +71,7 @@ int listar_tipo_produto(void){
         printf("Erro no acesso do arquivo\n!");
         return 0;
     }
-    printf("-------------------------- Lista de Alunos --------------------------------\n");
+    printf("-------------------------- Lista de Tipos --------------------------------\n");
     int i=0;
     while (fread(tipo, sizeof(Tipo), 1, fp))
     {

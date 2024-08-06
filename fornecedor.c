@@ -34,7 +34,7 @@ void menu_fornecedor(void){
         break;
       case 2:
         char nome[45];
-        printf("Digite o nome do cargo a ser excluido\n");
+        printf("Digite o nome do fornecedor a ser excluido\n");
         fgets(nome, 45, stdin);
         nome[strcspn(nome, "\n")] = '\0';
         Fornecedor *fornecedor_excl = buscar_fornecedor(nome);
@@ -90,10 +90,10 @@ int listar_fornecedores(void){
 
 void cadastro_fornecedor(Fornecedor *fornecedor_cad) {
     printf("\n=====================================\n");
-    printf("==== <Cadastrar Cargo> ====\n");
+    printf("====== <Cadastrar Fornecedor> =======\n");
     printf("=====================================\n");
 
-    printf("Digite o nome do cargo: ");
+    printf("Digite o nome do fornecedor: ");
     fgets(fornecedor_cad->nome, 50, stdin);
     fornecedor_cad->nome[strcspn(fornecedor_cad->nome, "\n")] = '\0';
 
